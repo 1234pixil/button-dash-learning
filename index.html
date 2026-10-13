@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Button Dash UK: a 60-second tap-the-right-answer quiz game for primary and secondary pupils in England, Wales, Scotland and Northern Ireland.">
+<meta name="theme-color" content="#2D67E6">
+<title>Button Dash UK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: classroom arcade. Account bar → country tiles → subject tabs → topic cards → full-screen tap round with chunky keys. */
+:root{
+  --bg:#EAEFF6; --surface:#FFFFFF; --ink:#14203A; --muted:#566886; --line:#D2DAE7;
+  --key:#FFFFFF; --key-edge:#B4C0D4; --hit:#12996A; --miss:#DC3F36; --gold:#B7860B;
+  --maths:#2D67E6; --english:#C73B7A; --science:#0E9A6E; --geography:#B9770A; --history:#7552DC;
+  --languages:#D04A1F; --computing:#4F5D7A; --uk:#0D7A92;
+  --england:#C8102E; --wales:#00843D; --scotland:#005EB8; --ni:#8C5A12;
+  --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --sc:var(--maths);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1422; --surface:#162037; --ink:#E9EEF8; --muted:#97A6BF; --line:#283651;
+  --key:#1D2A44; --key-edge:#080D18; --hit:#1FB87F; --miss:#F05A50; --gold:#E2B33C;
+  --maths:#4C80F2; --english:#DF5893; --science:#22B184; --geography:#D6931F; --history:#8E70EC;
+  --languages:#E8693A; --computing:#7584A6; --uk:#1E95AE;
+  --england:#E23A50; --wales:#18A55A; --scotland:#2C83E0; --ni:#B67A26; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1422; --surface:#162037; --ink:#E9EEF8; --muted:#97A6BF; --line:#283651;
+  --key:#1D2A44; --key-edge:#080D18; --hit:#1FB87F; --miss:#F05A50; --gold:#E2B33C;
+  --maths:#4C80F2; --english:#DF5893; --science:#22B184; --geography:#D6931F; --history:#8E70EC;
+  --languages:#E8693A; --computing:#7584A6; --uk:#1E95AE;
+  --england:#E23A50; --wales:#18A55A; --scotland:#2C83E0; --ni:#B67A26; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:20px 48px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--sc);outline-offset:3px}
+h2.sec{font-family:var(--f-display);font-weight:800;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px}
+
+/* Account */
+.account{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
+.who{display:flex;align-items:center;gap:10px;min-width:0}
+.who img{width:36px;height:36px;border-radius:50%;flex:none;background:var(--line)}
+.who b{display:block;line-height:1.2}
+.who small{color:var(--muted);font-size:.82rem}
+.mystats{display:flex;gap:16px;font-variant-numeric:tabular-nums;color:var(--muted);font-size:.85rem}
+.mystats b{color:var(--ink);font-family:var(--f-display);font-size:1.1rem;margin-right:4px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px 24px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:clamp(2.2rem,6vw,3.6rem);line-height:.95;letter-spacing:-.03em;margin:0;text-wrap:balance}
+.brand span{color:var(--sc);transition:color .25s}
+.tag{margin:6px 0 0;color:var(--muted);max-width:50ch}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:transparent;padding:8px 12px;font-weight:700;font-variant-numeric:tabular-nums}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seglabel{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:700}
+
+/* Countries */
+.countries{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:720px){.countries{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.country{position:relative;text-align:left;border:0;border-radius:16px;padding:14px 14px 12px;background:var(--c);color:#fff;display:flex;flex-direction:column;gap:2px;min-height:104px;box-shadow:0 5px 0 rgba(0,0,0,.3);box-shadow:0 5px 0 color-mix(in srgb,var(--c) 55%,#000);transition:transform .08s}
+.country:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.3);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 55%,#000)}
+.country b{font-family:var(--f-display);font-weight:800;font-size:1.35rem;line-height:1.1}
+.country i{font-style:normal;opacity:.9;font-size:.9rem}
+.country small{margin-top:auto;font-size:.75rem;opacity:.85}
+.country[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:3px}
+
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-weight:700}
+.tab i{width:12px;height:12px;border-radius:4px;background:var(--c)}
+.tab[aria-selected="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.tab[aria-selected="true"] i{background:#fff}
+
+.packhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:22px 0 12px}
+.packhead h3{font-family:var(--f-display);font-weight:800;font-size:1.8rem;margin:0;color:var(--sc);line-height:1.1}
+.packhead span{color:var(--muted)}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.topic{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.topic h4{font-family:var(--f-display);font-weight:800;font-size:1.25rem;margin:0;line-height:1.15}
+.topic p{margin:0;color:var(--muted);font-size:.93rem}
+.meta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.meta .top{color:var(--gold);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.chip{min-width:44px;padding:7px 10px;border-radius:10px;border:2px solid var(--key-edge);border-bottom-width:4px;background:var(--key);font-family:var(--f-display);font-weight:800;font-variant-numeric:tabular-nums}
+.chip:hover{border-color:var(--sc)}
+.chip:active{transform:translateY(2px);border-bottom-width:2px}
+.play{margin-top:auto;align-self:flex-start;padding:9px 20px;border-radius:12px;border:0;background:var(--sc);color:#fff;font-family:var(--f-display);font-weight:800;font-size:1.05rem;box-shadow:0 4px 0 rgba(0,0,0,.3);box-shadow:0 4px 0 color-mix(in srgb,var(--sc) 60%,#000)}
+.play:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.3);box-shadow:0 1px 0 color-mix(in srgb,var(--sc) 60%,#000)}
+
+/* Game */
+#game{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);overflow:auto}
+.bar{display:flex;align-items:center;gap:12px;padding:12px 16px;max-width:1040px;width:100%;margin:0 auto}
+.back{border:2px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 12px;font-weight:700}
+.gtitle{font-family:var(--f-display);font-weight:800;font-size:1.05rem;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat{display:flex;flex-direction:column;align-items:center;line-height:1;min-width:44px}
+.stat b{font-family:var(--f-display);font-weight:800;font-size:1.6rem;font-variant-numeric:tabular-nums}
+.stat small{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.bump{animation:bump .25s}
+@keyframes bump{50%{transform:scale(1.25);color:var(--hit)}}
+.timer{height:10px;background:var(--line);max-width:1008px;width:calc(100% - 32px);margin:0 auto;border-radius:99px;overflow:hidden}
+.timer div{height:100%;background:var(--sc);border-radius:99px;width:100%}
+.timer.low div{background:var(--miss)}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:clamp(16px,4vh,30px);padding:clamp(16px,4vh,40px) 16px 24px;max-width:860px;width:100%;margin:0 auto}
+.q{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,7vw,3.8rem);line-height:1.08;text-align:center;letter-spacing:-.02em;text-wrap:balance;margin:0;font-variant-numeric:tabular-nums}
+.q.long{font-size:clamp(1.35rem,4.2vw,2.3rem)}
+.qhint{margin:-8px 0 0;color:var(--muted);text-align:center;font-weight:700;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase}
+.keys{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:10px;width:100%}
+.key{min-height:clamp(58px,10vh,84px);padding:8px 6px;border-radius:14px;border:2px solid var(--key-edge);border-bottom-width:7px;background:var(--key);font-family:var(--f-display);font-weight:800;font-size:clamp(1.25rem,3.6vw,1.9rem);font-variant-numeric:tabular-nums;line-height:1.1;overflow-wrap:anywhere;transition:transform .06s,border-color .1s}
+.keys.text .key{font-size:clamp(1rem,2.8vw,1.3rem)}
+.key:hover{border-color:var(--sc)}
+.key:active{transform:translateY(4px);border-bottom-width:3px}
+.key.hit{background:var(--hit);border-color:rgba(0,0,0,.3);border-color:color-mix(in srgb,var(--hit) 65%,#000);color:#fff}
+.key.miss{background:var(--miss);border-color:rgba(0,0,0,.3);border-color:color-mix(in srgb,var(--miss) 65%,#000);color:#fff;animation:shake .35s}
+.key.reveal{outline:3px dashed var(--hit);outline-offset:2px}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+
+.overlay{position:absolute;inset:0;display:grid;place-items:center;background:var(--bg);background:color-mix(in srgb,var(--bg) 90%,transparent);padding:16px;overflow:auto}
+.count{font-family:var(--f-display);font-weight:800;font-size:clamp(5rem,22vw,10rem);color:var(--sc);animation:pop .55s}
+@keyframes pop{from{transform:scale(.4);opacity:.2}}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:24px 22px;width:min(440px,100%);text-align:center;display:flex;flex-direction:column;gap:12px}
+.card h2{font-family:var(--f-display);font-weight:800;font-size:2rem;margin:0}
+.big{font-family:var(--f-display);font-weight:800;font-size:5rem;line-height:1;color:var(--sc);font-variant-numeric:tabular-nums}
+.facts{display:flex;justify-content:center;gap:24px;color:var(--muted);font-variant-numeric:tabular-nums}
+.facts b{display:block;color:var(--ink);font-family:var(--f-display);font-size:1.4rem}
+.newbest{font-weight:700;color:var(--hit)}
+.board{text-align:left;border-top:2px solid var(--line);padding-top:12px}
+.board h3{margin:0 0 8px;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.board ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.board li{display:grid;grid-template-columns:22px 26px 1fr auto;align-items:center;gap:8px;font-variant-numeric:tabular-nums}
+.board li img{width:26px;height:26px;border-radius:50%}
+.board li .n{color:var(--muted);font-weight:700}
+.board li .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.board li.me .nm{font-weight:700}
+.board li b{font-family:var(--f-display)}
+.board li:first-child .n{color:var(--gold)}
+.note{font-size:.82rem;color:var(--muted);margin:0}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.ghost{padding:9px 18px;border-radius:12px;border:2px solid var(--line);background:transparent;font-weight:700}
+
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end}
+.levels{display:flex;gap:8px}
+.lvl{padding:8px 16px;border-radius:14px;border:2px solid var(--line);background:var(--surface);text-align:left;display:flex;flex-direction:column;line-height:1.2}
+.lvl b{font-family:var(--f-display);font-weight:800;font-size:1.15rem}
+.lvl small{color:var(--muted);font-size:.78rem}
+.lvl[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.lvl[aria-pressed="true"] small{color:inherit;opacity:.8}
+.acctright{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.authform{display:flex;flex-wrap:wrap;gap:10px;align-items:end;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:14px;margin-bottom:16px}
+.authform label{display:flex;flex-direction:column;font-size:.78rem;font-weight:700;color:var(--muted);gap:4px;flex:1 1 200px;min-width:0}
+.authform input{font:inherit;font-size:1rem;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.authform input:focus-visible{outline:3px solid var(--sc);outline-offset:1px}
+.authmsg{flex-basis:100%;margin:0;font-size:.88rem;color:var(--muted)}
+@media (max-width:480px){ .keys{gap:8px} .stat b{font-size:1.3rem} .mystats{gap:10px} }
+@media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
+</style>
+<style>html{color-scheme:light}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+
+<div class="wrap" id="home">
+  <div class="account">
+    <div class="who" id="who"><img id="avatar" alt=""><div><b id="whoName">Guest player</b><small id="whoNote">Scores are saved on this device</small></div></div>
+    <div class="acctright">
+      <div class="mystats" id="mystats" hidden><span><b id="stGames">0</b>games</span><span><b id="stCorrect">0</b>correct</span><span><b id="stBests">0</b>bests</span></div>
+      <button class="ghost" id="authBtn" type="button" hidden>Sign in</button>
+    </div>
+  </div>
+  <form class="authform" id="authForm" hidden>
+    <label for="authName">Leaderboard name<input id="authName" maxlength="24" autocomplete="nickname" placeholder="e.g. Sam J" required></label>
+    <label for="authEmail">Email<input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+    <button class="play" type="submit" id="authSend">Email me a sign-in link</button>
+    <p class="authmsg" id="authMsg">We'll email you a link. Tap it and you're signed in, no password needed. Use a first name or nickname, not your full name.</p>
+  </form>
+  <header class="mast">
+    <div>
+      <h1 class="brand">Button<span> Dash</span> UK</h1>
+      <p class="tag">Choose primary or secondary, pick your country or a subject, then hit the right button as many times as you can before the clock runs out.</p>
+    </div>
+    <div class="controls">
+      <div><span class="seglabel">School</span><div class="levels" id="levels"></div></div>
+      <div><span class="seglabel">Round length</span><div class="seg" id="round"></div></div>
+    </div>
+  </header>
+
+  <h2 class="sec">Choose your country</h2>
+  <div class="countries" id="countries"></div>
+
+  <h2 class="sec">Or pick a subject</h2>
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+
+  <div class="packhead"><h3 id="packName"></h3><span id="packNote"></span></div>
+  <section class="topics" id="topics"></section>
+</div>
+
+<div id="game" hidden>
+  <div class="bar">
+    <button class="back" id="quit" type="button">← Topics</button>
+    <div class="gtitle" id="gtitle"></div>
+    <div class="stat"><b id="score">0</b><small>Score</small></div>
+    <div class="stat"><b id="secs">60</b><small id="secsLabel">Secs</small></div>
+    <button class="back" id="done" type="button" hidden>Finish</button>
+  </div>
+  <div class="timer" id="timer"><div id="tfill"></div></div>
+  <main class="stage">
+    <h2 class="q" id="q"></h2>
+    <p class="qhint" id="qhint" hidden></p>
+    <div class="keys" id="keys"></div>
+  </main>
+  <div class="overlay" id="countdown" hidden><div class="count" id="countn">3</div></div>
+  <div class="overlay" id="end" hidden>
+    <div class="card">
+      <h2 id="endTitle">Time's up!</h2>
+      <div class="big" id="final">0</div>
+      <div class="facts">
+        <div><b id="acc">0%</b>accuracy</div>
+        <div><b id="best">0</b>your best</div>
+      </div>
+      <div class="newbest" id="newbest" hidden>New personal best!</div>
+      <div class="board" id="board" hidden><h3 id="boardTitle">Top players</h3><ol id="boardList"></ol></div>
+      <p class="note" id="endNote" hidden></p>
+      <div class="row">
+        <button class="play" id="again" type="button">Play again</button>
+        <button class="ghost" id="other" type="button">Choose topic</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================
+   ONLINE LEADERBOARD SETUP (optional, for your own website)
+   Paste your Supabase project URL and anon (public) key here.
+   Leave both empty and the game still works, saving scores
+   on each player's own device.
+   ========================================================== */
+const SUPABASE_URL = '';
+const SUPABASE_ANON_KEY = '';
+
+(() => {
+const rand=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const range=(a,b,s=1)=>{const r=[];for(let i=a;i<=b;i+=s)r.push(i);return r};
+function near(a,step,lo,hi,count,extra=[]){
+  const s=new Set([a]);extra.forEach(v=>{if(v>=lo&&v<=hi&&s.size<count)s.add(v)});
+  let t=0;while(s.size<count&&t++<600){const v=a+step*rand(-9,9);if(v>=lo&&v<=hi)s.add(v)}
+  return [...s].sort((x,y)=>x-y);
+}
+const fixed=(items,choices,hint)=>()=>{const [q,a]=pick(items);return{q,a,opts:choices,hint}};
+const pool=(items,hint,n=6)=>()=>{const [q,a]=pick(items);
+  const others=shuffle([...new Set(items.map(i=>String(i[1])).filter(x=>x!==String(a)))]).slice(0,n-1);
+  return{q,a,opts:shuffle([a,...others]),hint}};
+const explicit=(items,hint)=>()=>{const [q,a,w]=pick(items);return{q,a,opts:shuffle([a,...w]),hint}};
+
+/* ---------- Maths generators ---------- */
+const table=n=>()=>{const k=rand(1,12);return{q:`${k} × ${n}`,a:k*n,opts:range(1,12).map(i=>i*n)}};
+const mixedTable=()=>{const n=rand(2,12),k=rand(1,12),a=n*k;return{q:`${k} × ${n}`,a,opts:near(a,1,1,144,12,[(k+1)*n,(k-1)*n,k*(n+1),k*(n-1),a+10,a-10])}};
+const divide=n=>()=>{const k=rand(1,12);return{q:`${k*n} ÷ ${n}`,a:k,opts:range(1,12)}};
+const mixedDivide=()=>divide(rand(2,12))();
+const bond10=()=>{const k=rand(0,9);return{q:`${k} + ? = 10`,a:10-k,opts:range(1,10)}};
+const bond20=()=>{const k=rand(0,19);return{q:`${k} + ? = 20`,a:20-k,opts:range(1,20)}};
+const bond100=()=>{const k=rand(1,19)*5;return{q:`${k} + ? = 100`,a:100-k,opts:near(100-k,5,5,95,12)}};
+const doubles=()=>{const k=rand(2,50);return{q:`Double ${k}`,a:2*k,opts:near(2*k,2,2,100,12,[2*k+10,2*k-10])}};
+const halves=()=>{const k=rand(1,50)*2;return{q:`Half of ${k}`,a:k/2,opts:near(k/2,1,1,50,12,[k/2+5,k/2-5])}};
+const squares=()=>{const k=rand(1,12);return{q:`${k}²`,a:k*k,opts:range(1,12).map(i=>i*i),hint:'square number'}};
+const add20=()=>{const a=rand(1,12),b=rand(1,8);return{q:`${a} + ${b}`,a:a+b,opts:near(a+b,1,2,20,12)}};
+const add100=()=>{const a=rand(11,79),b=rand(5,20),s=a+b;return{q:`${a} + ${b}`,a:s,opts:near(s,1,1,100,12,[s+10,s-10])}};
+const sub100=()=>{const a=rand(25,99),b=rand(5,24),s=a-b;return{q:`${a} − ${b}`,a:s,opts:near(s,1,1,99,12,[s+10,s-10])}};
+const fracOf=()=>{const d=pick([2,3,4,5,10]),k=rand(1,12);return{q:`1/${d} of ${d*k}`,a:k,opts:range(1,12)}};
+function roman(n){const m=[[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];let s='';for(const [v,r] of m)while(n>=v){s+=r;n-=v}return s}
+const romanRead=()=>{const n=rand(1,100);return{q:roman(n),a:n,opts:near(n,1,1,100,12,[n+10,n-10,n+5]),hint:'roman numeral → number'}};
+const romanWrite=()=>{const n=rand(1,50);return{q:String(n),a:roman(n),opts:shuffle(near(n,1,1,50,6,[n+10,n-1,n+1]).map(roman)),hint:'number → roman numeral'}};
+const placeValue=()=>{const ds=shuffle(range(1,9)).slice(0,4),N=+ds.join(''),p=rand(0,3),d=ds[p],v=d*10**(3-p);
+  return{q:`The ${d} in ${N.toLocaleString('en-GB')}`,a:v.toLocaleString('en-GB'),opts:[d*1000,d*100,d*10,d].map(x=>x.toLocaleString('en-GB')),hint:'what is it worth?'}};
+const measures=pool([['Days in a week',7],['Months in a year',12],['Hours in a day',24],['Minutes in an hour',60],['Weeks in a year',52],
+  ['Days in a year',365],['Days in a leap year',366],['Grams in a kilogram',1000],['Centimetres in a metre',100],['Millimetres in a centimetre',10],
+  ['Metres in a kilometre',1000],['Millilitres in a litre',1000],['Days in February (not a leap year)',28],['Years in a century',100],['Years in a decade',10]],'how many?');
+
+const tableChips=(f,mixed)=>[...range(2,12).map(n=>({label:String(n),key:String(n),gen:f(n)})),{label:'Mixed',key:'mix',gen:mixed}];
+
+/* ---------- Subjects ---------- */
+/* ---------- Secondary maths generators ---------- */
+const fmt=n=>n<0?`−${-n}`:String(n);
+const negNums=()=>{let a=rand(-15,15),b=rand(-15,15);if(!b)b=-7;const plus=Math.random()<.5,r=plus?a+b:a-b;
+  return{q:`${fmt(a)} ${plus?'+':'−'} ${b<0?`(${fmt(b)})`:b}`,a:fmt(r),opts:near(r,1,-40,40,12,[plus?a-b:a+b,-r]).map(fmt)}};
+const bidmas=()=>{const f=rand(0,3);let a=rand(2,12),b=rand(2,9),c=rand(2,9),q,v,w;
+  if(f===0){q=`${a} + ${b} × ${c}`;v=a+b*c;w=(a+b)*c}
+  else if(f===1){q=`(${a} + ${b}) × ${c}`;v=(a+b)*c;w=a+b*c}
+  else if(f===2){q=`${a} × ${b} − ${c}`;v=a*b-c;w=a*(b-c)}
+  else{const k=rand(2,9);b=c*k;a=rand(k+1,30);q=`${a} − ${b} ÷ ${c}`;v=a-k;w=Math.round((a-b)/c)}
+  return{q,a:v,opts:near(v,1,-50,250,12,[w,v+10,v-10]),hint:'BIDMAS'}};
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+const percentOf=()=>{const p=pick([1,5,10,15,20,25,30,40,50,60,75,90]),step=100/gcd(p,100),amt=step*rand(1,Math.max(1,Math.floor(400/step))),v=p*amt/100;
+  return{q:`${p}% of ${amt}`,a:v,opts:near(v,Math.max(1,Math.round(v/10)),0,400,12,[v*2,amt-v])}};
+const sq15=()=>{const k=rand(1,15);return{q:`${k}²`,a:k*k,opts:range(1,15).map(i=>i*i)}};
+const cubes=()=>{const k=pick([1,2,3,4,5,6,10]);return{q:`${k}³`,a:k**3,opts:[1,6,8,9,16,25,27,64,100,125,216,1000]}};
+const roots=()=>{const k=rand(1,15);return{q:`√${k*k}`,a:k,opts:range(1,15)}};
+const eq1=()=>{const f=rand(0,2);let x,b,q;
+  if(f===0){x=rand(1,20);b=rand(1,20);q=`x + ${b} = ${x+b}`}
+  else if(f===1){b=rand(1,15);x=rand(b+1,b+20);q=`x − ${b} = ${x-b}`}
+  else{b=rand(2,9);x=rand(1,12);q=`${b}x = ${b*x}`}
+  return{q,a:x,opts:near(x,1,1,40,12),hint:'find x'}};
+const eq2=()=>{const x=rand(1,12),a=rand(2,9),b=rand(1,20),minus=Math.random()<.5&&a*x-b>0;
+  return{q:minus?`${a}x − ${b} = ${a*x-b}`:`${a}x + ${b} = ${a*x+b}`,a:x,opts:range(1,12),hint:'find x'}};
+const fracDec=pool([['1/2','0.5'],['1/4','0.25'],['3/4','0.75'],['1/5','0.2'],['2/5','0.4'],['3/5','0.6'],['1/10','0.1'],['3/10','0.3'],['1/8','0.125'],['1/100','0.01'],['7/10','0.7'],['1/20','0.05']],'as a decimal');
+const decPct=pool([['0.5','50%'],['0.25','25%'],['0.75','75%'],['0.1','10%'],['0.05','5%'],['0.2','20%'],['0.01','1%'],['1.5','150%'],['0.9','90%'],['0.125','12.5%'],['0.6','60%'],['0.03','3%']],'as a percentage');
+const isPrime=n=>{if(n<2)return false;for(let i=2;i*i<=n;i++)if(n%i===0)return false;return true};
+const PRIMES=range(2,100).filter(isPrime),NONPRIMES=range(4,100).filter(n=>!isPrime(n));
+const primeGen=()=>{const n=Math.random()<.5?pick(PRIMES):pick(NONPRIMES);return{q:String(n),a:isPrime(n)?'Prime':'Not prime',opts:['Prime','Not prime'],hint:'prime or not?'}};
+/* ---------- Secondary computing generators ---------- */
+const bin=(n,w)=>n.toString(2).padStart(w,'0');
+const bin4=()=>{const n=rand(0,15);return{q:bin(n,4),a:n,opts:range(0,15),hint:'binary → denary'}};
+const bin8=()=>{const n=rand(16,255);return{q:bin(n,8),a:n,opts:near(n,1,0,255,12,[n+128>255?n-128:n+128,n^1,n^2,n+16,n-16]),hint:'binary → denary'}};
+const toBin=()=>{const n=rand(1,15);return{q:String(n),a:bin(n,4),opts:shuffle(near(n,1,0,15,6,[n^1,n^8,n^2])).map(v=>bin(v,4)),hint:'denary → 4-bit binary'}};
+const gates=()=>{const g=pick(['AND','OR','XOR','NOT']),A=rand(0,1),B=rand(0,1);
+  const r=g==='AND'?A&B:g==='OR'?A|B:g==='XOR'?A^B:1-A;return{q:g==='NOT'?`NOT ${A}`:`${A} ${g} ${B}`,a:r,opts:[0,1],hint:'output?'}};
+
+const SECONDARY=[
+{id:'maths',name:'Maths',topics:[
+  {id:'mix',name:'Times tables & division',blurb:'Mixed, up to 12 × 12.',variants:[{label:'Times',key:'t',gen:mixedTable},{label:'Divide',key:'d',gen:mixedDivide}]},
+  {id:'neg',name:'Negative numbers',blurb:'Add and subtract across zero.',gen:negNums},
+  {id:'bidmas',name:'Order of operations',blurb:'BIDMAS: brackets first, then × and ÷, then + and −.',gen:bidmas},
+  {id:'pct',name:'Percentages',blurb:'Percentages of amounts.',gen:percentOf},
+  {id:'pow',name:'Powers & roots',blurb:'Squares to 15², cubes and square roots.',variants:[{label:'Squares',key:'sq',gen:sq15},{label:'Cubes',key:'cu',gen:cubes},{label:'Roots',key:'rt',gen:roots}]},
+  {id:'alg',name:'Solving equations',blurb:'Find x.',variants:[{label:'One step',key:'1',gen:eq1},{label:'Two step',key:'2',gen:eq2}]},
+  {id:'fdp',name:'Fractions, decimals, percents',blurb:'Convert between them.',variants:[{label:'Fraction → decimal',key:'fd',gen:fracDec},{label:'Decimal → %',key:'dp',gen:decPct}]},
+  {id:'prime',name:'Prime or not?',blurb:'Numbers up to 100.',gen:primeGen},
+  {id:'angles',name:'Angle facts',blurb:'Lines, triangles and polygons.',gen:explicit([
+    ['Angles on a straight line add up to','180°',['90°','360°','270°']],
+    ['Angles around a point add up to','360°',['180°','270°','90°']],
+    ['Angles in a triangle add up to','180°',['360°','90°','270°']],
+    ['Angles in a quadrilateral add up to','360°',['180°','540°','270°']],
+    ['Each angle in an equilateral triangle','60°',['45°','90°','30°']],
+    ['Interior angles of a pentagon add up to','540°',['360°','720°','480°']],
+    ['Interior angles of a hexagon add up to','720°',['540°','360°','900°']],
+    ['An angle between 90° and 180° is','Obtuse',['Acute','Reflex','Right']],
+    ['An angle less than 90° is','Acute',['Obtuse','Reflex','Straight']],
+    ['An angle more than 180° is','Reflex',['Obtuse','Acute','Right']]
+  ])},
+]},
+{id:'english',name:'English',topics:[
+  {id:'devices',name:'Language devices',blurb:'Simile, metaphor, personification and more.',gen:fixed([
+    ['The wind howled angrily.','Personification'],['The trees danced in the breeze.','Personification'],['The sun smiled down on us.','Personification'],
+    ['Her smile was as bright as the sun.','Simile'],['He ran like the wind.','Simile'],['The water was as cold as ice.','Simile'],
+    ['The classroom was a zoo.','Metaphor'],['Time is a thief.','Metaphor'],['His heart was a stone.','Metaphor'],
+    ['Sally sells seashells by the seashore.','Alliteration'],['Peter picked purple plums.','Alliteration'],['Wild winds whipped westward.','Alliteration'],
+    ['The door creaked open.','Onomatopoeia'],['Crash! The plates hit the floor.','Onomatopoeia'],['The fire crackled.','Onomatopoeia'],
+    ["I've told you a million times!",'Hyperbole'],['This bag weighs a ton.','Hyperbole'],["I'm so hungry I could eat a horse.",'Hyperbole']
+  ],['Simile','Metaphor','Personification','Alliteration','Onomatopoeia','Hyperbole'],'which device?')},
+  {id:'texts',name:'Set texts & authors',blurb:'Who wrote it?',gen:pool([
+    ['A Christmas Carol','Charles Dickens'],['An Inspector Calls','J. B. Priestley'],['Of Mice and Men','John Steinbeck'],['Lord of the Flies','William Golding'],
+    ['Dr Jekyll and Mr Hyde','Robert Louis Stevenson'],['Frankenstein','Mary Shelley'],['Animal Farm','George Orwell'],['Pride and Prejudice','Jane Austen'],
+    ['Macbeth','William Shakespeare'],['Blood Brothers','Willy Russell'],['Jane Eyre','Charlotte Brontë'],['The Sign of Four','Arthur Conan Doyle']
+  ],'who wrote it?')},
+  {id:'shakes',name:'Shakespeare characters',blurb:'Which play are they in?',gen:pool([
+    ['Lady Macbeth','Macbeth'],['Banquo','Macbeth'],['Juliet','Romeo and Juliet'],['Mercutio','Romeo and Juliet'],['Prospero','The Tempest'],
+    ['Shylock','The Merchant of Venice'],['Puck','A Midsummer Night\'s Dream'],['Titania','A Midsummer Night\'s Dream'],['Iago','Othello'],
+    ['Ophelia','Hamlet'],['Brutus','Julius Caesar'],['Goneril','King Lear']
+  ],'which play?')},
+  {id:'grammar',name:'Grammar terms',blurb:'Know your terminology.',gen:pool([
+    ['Replaces a noun (he, they, it)','Pronoun'],['Joins words or clauses (and, but, because)','Conjunction'],['Shows where or when (under, after)','Preposition'],
+    ['Describes a verb (quickly, softly)','Adverb'],['A clause that makes sense on its own','Main clause'],["A clause that can't stand alone",'Subordinate clause'],
+    ['Names a group (team, flock, swarm)','Collective noun'],['Words with the same meaning','Synonyms'],['Words with opposite meanings','Antonyms'],
+    ['Comes before a noun (a, an, the)','Article']
+  ],'which term?')},
+  {id:'spell2',name:'Tricky spellings',blurb:'The ones that catch everyone out.',gen:explicit([
+    ['to have room for','accommodate',['accomodate','acommodate','accommadate']],
+    ['to make someone feel awkward','embarrass',['embarass','embaress','embarras']],
+    ['your sense of right and wrong','conscience',['concience','conscence','consience']],
+    ['something that happens','occurrence',['occurence','ocurrence','occurrance']],
+    ['a special right','privilege',['priviledge','privilage','privelege']],
+    ['the people who run a country','government',['goverment','govermint','governmant']],
+    ['the natural world around us','environment',['enviroment','envirnment','environmant']],
+    ['the start','beginning',['begining','beggining','beginnig']],
+    ['to get something','receive',['recieve','receeve','receve']],
+    ['to suggest something is good','recommend',['reccommend','recomend','reccomend']],
+    ['to reach a goal','achieve',['acheive','acheeve','achive']],
+    ['to talk someone into something','persuade',['persaude','perswade','pursuade']]
+  ],'pick the right spelling')},
+]},
+{id:'science',name:'Science',topics:[
+  {id:'cells',name:'Cell biology',blurb:'What does each part do?',gen:pool([
+    ['Controls the cell and holds DNA','Nucleus'],['Where respiration releases energy','Mitochondria'],['Where proteins are made','Ribosomes'],
+    ['Controls what enters and leaves','Cell membrane'],['Strengthens a plant cell','Cell wall'],['Where photosynthesis happens','Chloroplasts'],
+    ['Filled with cell sap, keeps the cell firm','Vacuole'],['Jelly where most reactions happen','Cytoplasm']
+  ],'which part?')},
+  {id:'symbols',name:'Element symbols',blurb:'The periodic table, quick-fire.',variants:[
+    {label:'Symbol → name',key:'sn',gen:pool([['Na','Sodium'],['K','Potassium'],['Fe','Iron'],['Au','Gold'],['Ag','Silver'],['Pb','Lead'],['Cu','Copper'],['Cl','Chlorine'],['O','Oxygen'],['H','Hydrogen'],['C','Carbon'],['N','Nitrogen'],['Ca','Calcium'],['Mg','Magnesium'],['He','Helium'],['Zn','Zinc']],'which element?')},
+    {label:'Name → symbol',key:'ns',gen:pool([['Sodium','Na'],['Potassium','K'],['Iron','Fe'],['Gold','Au'],['Silver','Ag'],['Lead','Pb'],['Copper','Cu'],['Chlorine','Cl'],['Oxygen','O'],['Hydrogen','H'],['Carbon','C'],['Nitrogen','N'],['Calcium','Ca'],['Magnesium','Mg'],['Helium','He'],['Zinc','Zn']],'which symbol?')}]},
+  {id:'formulas',name:'Chemical formulas',blurb:'Name the compound.',gen:pool([
+    ['H₂O','Water'],['CO₂','Carbon dioxide'],['NaCl','Sodium chloride'],['CH₄','Methane'],['O₂','Oxygen'],['NH₃','Ammonia'],
+    ['HCl','Hydrochloric acid'],['H₂SO₄','Sulfuric acid'],['CaCO₃','Calcium carbonate']
+  ],'which compound?')},
+  {id:'ph',name:'Acids & alkalis',blurb:'Acid, neutral or alkali?',gen:fixed([
+    ['lemon juice','Acid'],['vinegar','Acid'],['stomach acid','Acid'],['hydrochloric acid','Acid'],['cola','Acid'],
+    ['pure water','Neutral'],['salt solution','Neutral'],
+    ['soap','Alkali'],['bleach','Alkali'],['oven cleaner','Alkali'],['sodium hydroxide','Alkali'],['baking soda solution','Alkali']
+  ],['Acid','Neutral','Alkali'],'acid, neutral or alkali?')},
+  {id:'units',name:'Physics units',blurb:'Match the quantity to its unit.',gen:pool([
+    ['Force','newton (N)'],['Energy','joule (J)'],['Power','watt (W)'],['Current','ampere (A)'],['Potential difference','volt (V)'],
+    ['Resistance','ohm (Ω)'],['Frequency','hertz (Hz)'],['Mass','kilogram (kg)'],['Charge','coulomb (C)'],['Pressure','pascal (Pa)']
+  ],'which unit?')},
+  {id:'eqns',name:'Physics equations',blurb:'Speed, force, density and more.',gen:explicit([
+    ['Speed =','distance ÷ time',['distance × time','time ÷ distance','mass × acceleration']],
+    ['Force =','mass × acceleration',['mass ÷ acceleration','distance ÷ time','mass × volume']],
+    ['Density =','mass ÷ volume',['volume ÷ mass','mass × volume','force ÷ area']],
+    ['Pressure =','force ÷ area',['area ÷ force','force × area','mass ÷ volume']],
+    ['Power =','energy ÷ time',['energy × time','time ÷ energy','force × distance']],
+    ['Potential difference =','current × resistance',['current ÷ resistance','power × time','charge ÷ time']],
+    ['Work done =','force × distance',['force ÷ distance','mass × speed','energy ÷ time']],
+    ['Weight =','mass × gravitational field strength',['mass ÷ gravitational field strength','force × distance','mass × speed']]
+  ])},
+]},
+{id:'geography',name:'Geography',topics:[
+  {id:'caps2',name:'Capitals (hard)',blurb:'The ones people get wrong.',gen:pool([
+    ['Australia','Canberra'],['Canada','Ottawa'],['Brazil','Brasília'],['Turkey','Ankara'],['Switzerland','Bern'],['New Zealand','Wellington'],
+    ['Nigeria','Abuja'],['Morocco','Rabat'],['Pakistan','Islamabad'],['South Korea','Seoul'],['Vietnam','Hanoi'],['Argentina','Buenos Aires'],
+    ['Netherlands','Amsterdam'],['Sweden','Stockholm'],['Poland','Warsaw'],['Ukraine','Kyiv']
+  ],'capital city?')},
+  {id:'tectonics',name:'Tectonic hazards',blurb:'Volcanoes, earthquakes and plates.',gen:pool([
+    ['Molten rock underground','Magma'],['Molten rock on the surface','Lava'],['Point on the surface above an earthquake','Epicentre'],
+    ['Point underground where an earthquake starts','Focus'],['Giant wave caused by an undersea earthquake','Tsunami'],
+    ['Boundary where plates move apart','Constructive'],['Boundary where one plate sinks under another','Destructive'],
+    ['Boundary where plates slide past each other','Conservative'],['Scientist who studies volcanoes','Volcanologist']
+  ],'which term?')},
+  {id:'rivers',name:'Rivers',blurb:'From source to mouth.',gen:pool([
+    ['Where a river begins','Source'],['Where a river meets the sea','Mouth'],['A bend in a river','Meander'],['A smaller river joining a larger one','Tributary'],
+    ['Where two rivers join','Confluence'],['Tidal part of a river near the sea','Estuary'],['Area of land drained by a river','Drainage basin'],
+    ['Lake formed from a cut-off meander','Ox-bow lake'],['Wall of rock a river drops over','Waterfall']
+  ],'which feature?')},
+  {id:'weather',name:'Weather & climate',blurb:'Rainfall types and instruments.',gen:pool([
+    ['Rain caused by air rising over mountains','Relief rainfall'],['Rain caused by the ground heating the air','Convectional rainfall'],
+    ['Rain where warm air meets cold air','Frontal rainfall'],['Measures air pressure','Barometer'],['Measures wind speed','Anemometer'],
+    ['Measures rainfall','Rain gauge'],['Average weather over a long time','Climate'],['Gases trapping heat around the Earth','Greenhouse effect']
+  ],'which term?')},
+]},
+{id:'history',name:'History',topics:[
+  {id:'dates2',name:'Key dates',blurb:'Tudors to the 20th century.',gen:pool([
+    ['Henry VIII breaks with Rome','1534'],['English Civil War begins','1642'],['Battle of Waterloo','1815'],['Slavery Abolition Act','1833'],
+    ['World War One begins','1914'],['Battle of the Somme begins','1916'],['Russian Revolution','1917'],['Some women win the vote','1918'],
+    ['World War Two begins','1939'],['D-Day landings','1944'],['NHS founded','1948'],['Berlin Wall falls','1989']
+  ],'which year?')},
+  {id:'people2',name:'Key people',blurb:'Who am I?',gen:pool([
+    ['Led the suffragettes','Emmeline Pankhurst'],['Lord Protector after the Civil War','Oliver Cromwell'],['Engineer of the Great Western Railway','Isambard Kingdom Brunel'],
+    ['Jamaican-born nurse in the Crimean War','Mary Seacole'],['Wrote On the Origin of Species','Charles Darwin'],['Led India\'s non-violent independence movement','Mahatma Gandhi'],
+    ['Gave the "I Have a Dream" speech','Martin Luther King Jr'],['First Black president of South Africa','Nelson Mandela'],
+    ['Refused to give up her bus seat in 1955','Rosa Parks'],['Prime Minister when the NHS was founded','Clement Attlee']
+  ],'who was it?')},
+  {id:'terms',name:'History terms',blurb:'Events and ideas.',gen:pool([
+    ['Women campaigning for the vote with direct action','Suffragettes'],['Tension between the USA and USSR after 1945','Cold War'],
+    ['Nazi murder of six million Jewish people','Holocaust'],['Moving children out of cities in WW2','Evacuation'],['German bombing of British cities, 1940–41','The Blitz'],
+    ['Limiting food and goods in wartime','Rationing'],['Treaty that ended WW1 in 1919','Treaty of Versailles'],['Wall that divided Berlin, 1961–89','Berlin Wall'],
+    ['Change from farms to factories, 1700s–1800s','Industrial Revolution']
+  ],'which term?')},
+]},
+{id:'languages',name:'Languages',topics:[
+  {id:'frv',name:'French verbs',blurb:'Infinitives you need to know.',gen:pool([
+    ['avoir','to have'],['être','to be'],['aller','to go'],['faire','to do / make'],['manger','to eat'],['jouer','to play'],
+    ['regarder','to watch'],['aimer','to like / love'],['habiter','to live'],['parler','to speak']
+  ],'in English?')},
+  {id:'esv',name:'Spanish verbs',blurb:'Infinitives you need to know.',gen:pool([
+    ['tener','to have'],['ser','to be'],['ir','to go'],['hacer','to do / make'],['comer','to eat'],['jugar','to play'],
+    ['vivir','to live'],['hablar','to speak'],['ver','to see'],['beber','to drink']
+  ],'in English?')},
+  {id:'de',name:'German words',blurb:'Hallo! What does it mean?',gen:pool([
+    ['Hallo','Hello'],['Tschüss','Bye'],['Danke','Thank you'],['Bitte','Please'],['Ja','Yes'],['Nein','No'],['der Hund','the dog'],
+    ['die Katze','the cat'],['die Schule','school'],['rot','red'],['blau','blue'],['grün','green'],['eins','one'],['zwei','two'],['drei','three']
+  ],'in English?')},
+]},
+{id:'computing',name:'Computing',topics:[
+  {id:'binary',name:'Binary',blurb:'Convert between binary and denary.',variants:[{label:'4-bit',key:'4',gen:bin4},{label:'8-bit',key:'8',gen:bin8},{label:'To binary',key:'tb',gen:toBin}]},
+  {id:'logic',name:'Logic gates',blurb:'AND, OR, XOR, NOT.',gen:gates},
+  {id:'hardware',name:'Hardware & networks',blurb:'CPU, RAM, LAN and more.',gen:pool([
+    ['Carries out program instructions','CPU'],['Temporary memory, wiped when power is off','RAM'],['Memory holding the start-up instructions','ROM'],
+    ['Processes graphics','GPU'],['Storage with no moving parts','SSD'],['Connects all the components together','Motherboard'],
+    ['Translates a whole program at once','Compiler'],['Translates a program line by line','Interpreter'],['8 bits','Byte'],['4 bits','Nibble'],
+    ['Network across a small area, like a school','LAN'],['Network across a large area','WAN']
+  ],'which term?')},
+]},
+{id:'uk',name:'UK & Citizenship',topics:[
+  {id:'gov',name:'How the UK is run',blurb:'Parliaments, elections and rights.',gen:explicit([
+    ['Where the UK Parliament meets','Westminster',['Holyrood','Senedd','Stormont']],
+    ['Where the Scottish Parliament meets','Holyrood',['Westminster','Senedd','Stormont']],
+    ['Name of the Welsh Parliament','Senedd',['Holyrood','Dáil','Stormont']],
+    ['Where the Northern Ireland Assembly meets','Stormont',['Holyrood','Senedd','Westminster']],
+    ['Head of the UK government','Prime Minister',['Monarch','Speaker','Chancellor']],
+    ['Head of state of the UK','The monarch',['Prime Minister','Speaker','Mayor of London']],
+    ['The two Houses of Parliament','Commons and Lords',['Senate and Congress','Senedd and Dáil','Cabinet and Crown']],
+    ['Minimum voting age in UK general elections','18',['16','21','17']],
+    ['Chairs debates in the House of Commons','The Speaker',['Prime Minister','Monarch','Chancellor']],
+    ['Number of nations in the UK','4',['3','5','6']]
+  ])},
+  {id:'where',name:'Where in the UK?',blurb:'England, Scotland, Wales or Northern Ireland?',gen:null},
+]},
+];
+
+const SUBJECTS=[
+{id:'maths',name:'Maths',topics:[
+  {id:'times',name:'Times tables',blurb:'Pick a table, or mix them all up.',variants:tableChips(table,mixedTable)},
+  {id:'div',name:'Division facts',blurb:'The times tables, backwards.',variants:tableChips(divide,mixedDivide)},
+  {id:'bonds',name:'Number bonds',blurb:'What makes the total?',variants:[{label:'to 10',key:'10',gen:bond10},{label:'to 20',key:'20',gen:bond20},{label:'to 100',key:'100',gen:bond100}]},
+  {id:'addsub',name:'Adding & subtracting',blurb:'Mental maths, quick-fire.',variants:[{label:'Add to 20',key:'a20',gen:add20},{label:'Add to 100',key:'a100',gen:add100},{label:'Take away',key:'s100',gen:sub100}]},
+  {id:'dh',name:'Doubles & halves',blurb:'Numbers up to 100.',variants:[{label:'Doubles',key:'d',gen:doubles},{label:'Halves',key:'h',gen:halves}]},
+  {id:'frac',name:'Fractions of amounts',blurb:'Halves, thirds, quarters, fifths, tenths.',gen:fracOf},
+  {id:'sq',name:'Square numbers',blurb:'1² up to 12².',gen:squares},
+  {id:'rom',name:'Roman numerals',blurb:'I, V, X, L and C.',variants:[{label:'Read them',key:'r',gen:romanRead},{label:'Write them',key:'w',gen:romanWrite}]},
+  {id:'pv',name:'Place value',blurb:'Thousands, hundreds, tens and ones.',gen:placeValue},
+  {id:'meas',name:'Measures & time',blurb:'Grams, metres, days and years.',gen:measures},
+]},
+{id:'english',name:'English',topics:[
+  {id:'wc',name:'Word classes',blurb:'Noun, verb, adjective or adverb?',gen:fixed([
+    ['dog','Noun'],['table','Noun'],['happiness','Noun'],['castle','Noun'],['teacher','Noun'],['Cardiff','Noun'],
+    ['eat','Verb'],['write','Verb'],['laugh','Verb'],['whisper','Verb'],['think','Verb'],['build','Verb'],
+    ['shiny','Adjective'],['brave','Adjective'],['enormous','Adjective'],['tiny','Adjective'],['gloomy','Adjective'],['clever','Adjective'],
+    ['quickly','Adverb'],['slowly','Adverb'],['loudly','Adverb'],['gently','Adverb'],['carefully','Adverb'],['happily','Adverb']
+  ],['Noun','Verb','Adjective','Adverb'],'what type of word?')},
+  {id:'spell',name:'Spelling',blurb:'Tap the correct spelling.',gen:explicit([
+    ['the day after Tuesday','Wednesday',['Wensday','Wednsday','Wedensday']],
+    ['the second month','February',['Febuary','Februery','Febrary']],
+    ['"for the reason that"','because',['becuase','becaus','beacuse']],
+    ['someone you like spending time with','friend',['freind','frend','frined']],
+    ['to think something is true','believe',['beleive','belive','beleave']],
+    ['apart, not together','separate',['seperate','separete','seperet']],
+    ['certainly, for sure','definitely',['definately','definitly','defenitely']],
+    ['needed, must have','necessary',['neccessary','necesary','neccesary']],
+    ['land with water all around','island',['iland','islend','ieland']],
+    ['the beat in music','rhythm',['rythm','rhythem','rhytm']],
+    ['a building where you learn','school',['skool','scool','schol']],
+    ['a place to buy medicines','pharmacy',['farmacy','pharmasy','farmasy']],
+    ['very surprising','amazing',['amazeing','amaising','amazin']],
+    ['a lot of people together','crowd',['croud','crowed','krowd']]
+  ],'pick the right spelling')},
+  {id:'homo',name:'Homophones',blurb:'Sound the same, spelt differently.',gen:explicit([
+    ['I can ___ the birds singing.','hear',['here','hare','heer']],
+    ['Put the box over ___.','there',['their',"they're",'thare']],
+    ["___ going to the park later.","They're",['Their','There','Thier']],
+    ['The children packed ___ bags.','their',['there',"they're",'thier']],
+    ['I ate ___ apples.','two',['to','too','tow']],
+    ['Can I come ___?','too',['to','two','toe']],
+    ['The wind ___ my hat off.','blew',['blue','blow','bloo']],
+    ['I ___ the answer!','know',['no','now','knoe']],
+    ['She ___ a red dress.','wore',['war','wear','woar']],
+    ['We waited for an ___.','hour',['our','owr','are']]
+  ],'pick the right word')},
+  {id:'opp',name:'Opposites',blurb:'Find the antonym.',gen:pool([
+    ['hot','cold'],['big','small'],['happy','sad'],['fast','slow'],['open','closed'],['early','late'],['full','empty'],
+    ['ancient','modern'],['loud','quiet'],['deep','shallow'],['wet','dry'],['soft','hard'],['awake','asleep'],['brave','cowardly'],
+    ['generous','selfish'],['victory','defeat'],['arrive','depart'],['remember','forget']
+  ],'what is the opposite?')},
+  {id:'plur',name:'Tricky plurals',blurb:'One mouse, two…?',gen:explicit([
+    ['mouse','mice',['mouses','mices','meese']],['child','children',['childs','childrens','childes']],
+    ['tooth','teeth',['tooths','teeths','toothes']],['foot','feet',['foots','feets','footes']],
+    ['goose','geese',['gooses','geeses','goosen']],['sheep','sheep',['sheeps','sheepes','shoop']],
+    ['baby','babies',['babys','babyes','babbies']],['knife','knives',['knifes','knifs','knivs']],
+    ['leaf','leaves',['leafs','leafes','leavs']],['box','boxes',['boxs','boxen','boxies']],
+    ['woman','women',['womans','womens','womanes']],['person','people',['persons','peoples','persones']],
+    ['potato','potatoes',['potatos','potatoe','potatoies']],['wolf','wolves',['wolfs','wolfes','wolvs']]
+  ],'what is the plural?')},
+  {id:'contr',name:'Contractions',blurb:'Squash two words into one.',gen:pool([
+    ['do not',"don't"],['cannot',"can't"],['it is',"it's"],['I am',"I'm"],['will not',"won't"],['they are',"they're"],
+    ['we have',"we've"],['should not',"shouldn't"],['you are',"you're"],['she would',"she'd"],['I will',"I'll"],['let us',"let's"]
+  ],'shorten it')},
+  {id:'punc',name:'Punctuation',blurb:'Name that mark.',gen:pool([
+    ['Goes at the end of a question','question mark'],['Shows belonging or a missing letter','apostrophe'],['Separates items in a list','comma'],
+    ['Goes around the words someone says','inverted commas'],['Ends a statement','full stop'],['Shows strong feeling or surprise','exclamation mark'],
+    ['Holds extra information (like this)','brackets'],['Can introduce a list','colon']
+  ],'which punctuation?')},
+]},
+{id:'science',name:'Science',topics:[
+  {id:'animals',name:'Animal groups',blurb:'Mammal, bird, reptile and more.',gen:fixed([
+    ['whale','Mammal'],['bat','Mammal'],['dolphin','Mammal'],['hedgehog','Mammal'],['penguin','Bird'],['ostrich','Bird'],['owl','Bird'],['robin','Bird'],
+    ['crocodile','Reptile'],['snake','Reptile'],['tortoise','Reptile'],['lizard','Reptile'],['frog','Amphibian'],['newt','Amphibian'],['toad','Amphibian'],['salamander','Amphibian'],
+    ['shark','Fish'],['salmon','Fish'],['seahorse','Fish'],['cod','Fish'],['ant','Insect'],['butterfly','Insect'],['ladybird','Insect'],['bee','Insect']
+  ],['Mammal','Bird','Reptile','Amphibian','Fish','Insect'],'which group?')},
+  {id:'states',name:'States of matter',blurb:'Solid, liquid or gas?',gen:fixed([
+    ['ice','Solid'],['rock','Solid'],['wood','Solid'],['a coin','Solid'],['fridge-cold butter','Solid'],
+    ['water','Liquid'],['milk','Liquid'],['orange juice','Liquid'],['honey','Liquid'],['vinegar','Liquid'],
+    ['steam','Gas'],['oxygen','Gas'],['carbon dioxide','Gas'],['helium','Gas'],['air','Gas']
+  ],['Solid','Liquid','Gas'],'solid, liquid or gas?')},
+  {id:'space',name:'Space',blurb:'Planets, the Sun and the Moon.',gen:pool([
+    ['Planet closest to the Sun','Mercury'],['Largest planet','Jupiter'],['Known as the red planet','Mars'],['Planet with the biggest rings','Saturn'],
+    ['The planet we live on','Earth'],['Hottest planet','Venus'],['Planet furthest from the Sun','Neptune'],['The star at the centre of our solar system','The Sun'],
+    ["Earth's natural satellite",'The Moon'],['Planet that spins on its side','Uranus']
+  ])},
+  {id:'body',name:'Human body',blurb:'Organs and what they do.',gen:pool([
+    ['Pumps blood around your body','Heart'],['Takes in oxygen when you breathe','Lungs'],['Controls your thoughts and movement','Brain'],
+    ['Churns and breaks down food','Stomach'],['The largest organ','Skin'],['Cleans waste out of your blood','Kidneys'],
+    ['Bones that protect your heart and lungs','Ribs'],['Bone that protects your brain','Skull']
+  ])},
+  {id:'plants',name:'Plants',blurb:'How plants live and grow.',gen:explicit([
+    ['Part that takes in water from the soil','Roots',['Leaves','Petals','Stem']],
+    ['Part that makes food using sunlight','Leaves',['Roots','Seeds','Petals']],
+    ['Part that holds the plant up','Stem',['Roots','Petals','Pollen']],
+    ['Gas that plants take in to make food','Carbon dioxide',['Oxygen','Helium','Nitrogen']],
+    ['Gas that plants give out','Oxygen',['Carbon dioxide','Steam','Helium']],
+    ['Green substance in leaves','Chlorophyll',['Pollen','Nectar','Sap']],
+    ['Insect that carries pollen between flowers','Bee',['Ant','Beetle','Earwig']],
+    ['Making food from sunlight is called…','Photosynthesis',['Pollination','Evaporation','Germination']]
+  ])},
+  {id:'forces',name:'Forces, light & sound',blurb:'Pushes, pulls, shadows and vibrations.',gen:explicit([
+    ['Force that pulls things towards the Earth','Gravity',['Friction','Magnetism','Air resistance']],
+    ['Force that slows things sliding over a surface','Friction',['Gravity','Upthrust','Magnetism']],
+    ['Force that slows a parachute down','Air resistance',['Gravity','Friction','Magnetism']],
+    ['Metal that magnets attract','Iron',['Copper','Gold','Aluminium']],
+    ['Two north poles of magnets will…','Repel',['Attract','Melt','Stick']],
+    ['Sound is made by…','Vibrations',['Shadows','Magnets','Reflections']],
+    ['A shadow forms when light is blocked by an…','Opaque object',['Transparent object','Mirror','Echo']],
+    ['Light travels in…','Straight lines',['Circles','Zigzags','Curves']],
+    ['Light bouncing off a mirror is called…','Reflection',['Refraction','Vibration','Friction']]
+  ])},
+]},
+{id:'geography',name:'Geography',topics:[
+  {id:'caps',name:'World capitals',blurb:'Name the capital city.',gen:pool([
+    ['France','Paris'],['Germany','Berlin'],['Spain','Madrid'],['Italy','Rome'],['Republic of Ireland','Dublin'],['Japan','Tokyo'],
+    ['Australia','Canberra'],['Canada','Ottawa'],['USA','Washington, D.C.'],['Egypt','Cairo'],['China','Beijing'],['India','New Delhi'],
+    ['Kenya','Nairobi'],['Norway','Oslo'],['Greece','Athens'],['Portugal','Lisbon']
+  ],'capital city?')},
+  {id:'conts',name:'Continents',blurb:'Which continent is it in?',gen:fixed([
+    ['France','Europe'],['Poland','Europe'],['Norway','Europe'],['Japan','Asia'],['India','Asia'],['China','Asia'],
+    ['Kenya','Africa'],['Egypt','Africa'],['Nigeria','Africa'],['Canada','North America'],['Mexico','North America'],['USA','North America'],
+    ['Brazil','South America'],['Peru','South America'],['Argentina','South America'],['Australia','Oceania'],['New Zealand','Oceania'],['Fiji','Oceania']
+  ],['Europe','Asia','Africa','North America','South America','Oceania'],'which continent?')},
+  {id:'landmarks',name:'World landmarks',blurb:'Which country is it in?',gen:pool([
+    ['Eiffel Tower','France'],['Statue of Liberty','USA'],['Great Wall','China'],['Taj Mahal','India'],['Colosseum','Italy'],
+    ['Pyramids of Giza','Egypt'],['Sydney Opera House','Australia'],['Christ the Redeemer','Brazil'],['Machu Picchu','Peru'],
+    ['Mount Fuji','Japan'],['Sagrada Família','Spain'],['Table Mountain','South Africa']
+  ],'which country?')},
+  {id:'oceans',name:'Oceans & compass',blurb:'Big waters and directions.',gen:explicit([
+    ['Largest ocean','Pacific',['Atlantic','Indian','Arctic']],
+    ['Ocean between the UK and America','Atlantic',['Pacific','Indian','Southern']],
+    ['Ocean around the North Pole','Arctic',['Southern','Indian','Pacific']],
+    ['Ocean around Antarctica','Southern',['Arctic','Atlantic','Indian']],
+    ['Opposite of north','South',['East','West','North-east']],
+    ['The Sun rises in the…','East',['West','North','South']],
+    ['The Sun sets in the…','West',['East','North','South']],
+    ['Halfway between north and east','North-east',['South-west','North-west','South-east']]
+  ])},
+]},
+{id:'history',name:'History',topics:[
+  {id:'peoples',name:'Invaders & ancients',blurb:'Romans, Vikings, Tudors and more.',gen:pool([
+    ["Built Hadrian's Wall",'Romans'],['Sailed from Scandinavia in longships','Vikings'],['Royal family of Henry VIII','Tudors'],
+    ['Built the pyramids at Giza','Ancient Egyptians'],['Held the first Olympic Games','Ancient Greeks'],['Settled in England after the Romans left','Anglo-Saxons'],
+    ['Won the Battle of Hastings in 1066','Normans'],['Built Stonehenge','Stone Age people'],['Invaded Britain in AD 43','Romans'],['Buried a king in a ship at Sutton Hoo','Anglo-Saxons']
+  ],'which people?')},
+  {id:'famous',name:'Famous people',blurb:'Who am I?',gen:pool([
+    ['Queen from 1837 to 1901','Queen Victoria'],['King who had six wives','Henry VIII'],['Queen when the Spanish Armada was beaten','Elizabeth I'],
+    ['UK prime minister for most of WW2','Winston Churchill'],['"The Lady with the Lamp"','Florence Nightingale'],['Iceni queen who fought the Romans','Boudicca'],
+    ['Welsh leader who rebelled against English rule in 1400','Owain Glyndŵr'],['Scottish king who won at Bannockburn in 1314','Robert the Bruce'],
+    ['Wrote Hamlet and Macbeth','William Shakespeare'],['Edinburgh-born inventor of the telephone','Alexander Graham Bell'],
+    ['Queen for 70 years, until 2022','Elizabeth II'],['Fossil hunter from Lyme Regis','Mary Anning']
+  ],'who was it?')},
+  {id:'dates',name:'Key dates',blurb:'When did it happen?',gen:pool([
+    ['Battle of Hastings','1066'],['Magna Carta sealed','1215'],['Gunpowder Plot','1605'],['Great Fire of London','1666'],
+    ['Act of Union joins England and Scotland','1707'],['Victoria becomes queen','1837'],['Titanic sinks','1912'],['World War One begins','1914'],
+    ['World War Two ends','1945'],['First Moon landing','1969'],['Romans invade Britain','AD 43']
+  ],'which year?')},
+]},
+{id:'languages',name:'Languages',topics:[
+  {id:'fr',name:'French words',blurb:'Bonjour! What does it mean?',gen:pool([
+    ['Bonjour','Hello'],['Au revoir','Goodbye'],['Merci','Thank you'],["S'il vous plaît",'Please'],['Oui','Yes'],['Non','No'],
+    ['le chat','the cat'],['le chien','the dog'],['la pomme','the apple'],["l'école",'school'],['rouge','red'],['bleu','blue'],
+    ['vert','green'],['un','one'],['deux','two'],['trois','three']
+  ],'in English?')},
+  {id:'es',name:'Spanish words',blurb:'¡Hola! What does it mean?',gen:pool([
+    ['Hola','Hello'],['Adiós','Goodbye'],['Gracias','Thank you'],['Por favor','Please'],['Sí','Yes'],['Buenos días','Good morning'],
+    ['el gato','the cat'],['el perro','the dog'],['la manzana','the apple'],['la escuela','school'],['rojo','red'],['azul','blue'],
+    ['verde','green'],['uno','one'],['dos','two'],['tres','three']
+  ],'in English?')},
+]},
+{id:'computing',name:'Computing',topics:[
+  {id:'terms',name:'Computing words',blurb:'Algorithms, loops and bugs.',gen:pool([
+    ['Step-by-step instructions to solve a problem','Algorithm'],['Finding and fixing mistakes in code','Debugging'],['Repeating part of a program','Loop'],
+    ['Choosing what to do with if… then…','Selection'],['A named place to store a value','Variable'],['A mistake in a program','Bug'],
+    ['A tiny dot of colour on a screen','Pixel'],['A worldwide network of computers','Internet'],['A website that helps you find other pages','Search engine'],
+    ['The number system that uses only 0 and 1','Binary']
+  ])},
+  {id:'safe',name:'Staying safe online',blurb:'Smart choices on the internet.',gen:explicit([
+    ['A stranger online asks where you live. You…','Tell a trusted adult',['Tell them','Send a photo','Keep it secret']],
+    ['Who should know your password?','Only you and a trusted adult',['Your best friend','Everyone in class','Anyone who asks']],
+    ['A strong password uses…','Letters, numbers and symbols',['Your name','123456','Your pet\'s name']],
+    ['A message makes you feel upset. You…','Tell a trusted adult',['Reply angrily','Delete everything','Keep it secret']],
+    ['A pop-up says you won a prize! You…','Close it and tell an adult',['Click it','Enter your details','Share it']]
+  ])},
+]},
+{id:'uk',name:'Whole UK',topics:[
+  {id:'where',name:'Where in the UK?',blurb:'England, Scotland, Wales or Northern Ireland?',gen:fixed([
+    ['London','England'],['Manchester','England'],['Birmingham','England'],['Gloucester','England'],['Stonehenge','England'],['Lake District','England'],['York','England'],['Liverpool','England'],
+    ['Edinburgh','Scotland'],['Glasgow','Scotland'],['Aberdeen','Scotland'],['Loch Ness','Scotland'],['Ben Nevis','Scotland'],['Isle of Skye','Scotland'],['Inverness','Scotland'],
+    ['Cardiff','Wales'],['Swansea','Wales'],['Yr Wyddfa (Snowdon)','Wales'],['Conwy Castle','Wales'],['Anglesey','Wales'],['Aberystwyth','Wales'],['Wrexham','Wales'],
+    ['Belfast','Northern Ireland'],["Giant's Causeway",'Northern Ireland'],['Lough Neagh','Northern Ireland'],['Armagh','Northern Ireland'],['Mourne Mountains','Northern Ireland'],['Derry~Londonderry','Northern Ireland']
+  ],['England','Scotland','Wales','Northern Ireland'],'which nation?')},
+  {id:'symbols',name:'Capitals, saints & symbols',blurb:'Know all four nations.',gen:explicit([
+    ['Capital city of Wales','Cardiff',['Swansea','Newport','Bangor']],
+    ['Capital city of Scotland','Edinburgh',['Glasgow','Aberdeen','Dundee']],
+    ['Capital city of Northern Ireland','Belfast',['Armagh','Newry','Lisburn']],
+    ['Capital city of England','London',['Birmingham','Manchester','York']],
+    ['Patron saint of Wales','St David',['St George','St Andrew','St Patrick']],
+    ['Patron saint of Scotland','St Andrew',['St David','St George','St Patrick']],
+    ['Patron saint of England','St George',['St Andrew','St David','St Patrick']],
+    ['Patron saint of Ireland','St Patrick',['St George','St David','St Andrew']],
+    ['National flower of England','Rose',['Thistle','Daffodil','Shamrock']],
+    ['National flower of Scotland','Thistle',['Rose','Daffodil','Shamrock']],
+    ['National flower of Wales','Daffodil',['Rose','Thistle','Shamrock']],
+    ["Plant worn on St Patrick's Day",'Shamrock',['Thistle','Daffodil','Rose']]
+  ])},
+  {id:'land',name:'Mountains, rivers & seas',blurb:'The landscape of the UK.',gen:explicit([
+    ['Highest mountain in the UK','Ben Nevis',['Yr Wyddfa (Snowdon)','Scafell Pike','Slieve Donard']],
+    ['Longest river in the UK','River Severn',['River Thames','River Trent','River Tay']],
+    ['Largest lake in the UK','Lough Neagh',['Loch Ness','Loch Lomond','Windermere']],
+    ['Sea between Great Britain and Ireland','Irish Sea',['North Sea','Baltic Sea','English Channel']],
+    ['Water between England and France','English Channel',['Irish Sea','North Sea','Bristol Channel']],
+    ['Sea off the east coast of England','North Sea',['Irish Sea','Celtic Sea','English Channel']]
+  ])},
+]},
+];
+
+/* ---------- Country packs ---------- */
+const COUNTRIES=[
+{id:'england',name:'England',native:'England',curric:'National Curriculum · KS1–KS2',topics:[
+  {id:'facts',name:'England facts',blurb:'Flag, flower, saint and more.',gen:explicit([
+    ['Capital city of England','London',['Manchester','Birmingham','York']],
+    ['Patron saint of England','St George',['St Andrew','St David','St Patrick']],
+    ["St George's Day is on…",'23 April',['1 March','17 March','30 November']],
+    ['The flag of England is…','Red cross on white',['White cross on blue','Red dragon on green and white','Blue cross on red']],
+    ['National flower of England','Rose',['Thistle','Daffodil','Shamrock']],
+    ['Highest mountain in England','Scafell Pike',['Ben Nevis','Helvellyn','Yr Wyddfa (Snowdon)']],
+    ['Longest river entirely in England','River Thames',['River Severn','River Mersey','River Tyne']],
+    ['Largest natural lake in England','Windermere',['Loch Lomond','Lough Neagh','Coniston Water']],
+    ['City famous for its Roman baths','Bath',['Leeds','Hull','Leicester']],
+    ['Ancient stone circle in Wiltshire','Stonehenge',['Avebury Castle','Hadrian\'s Wall','Durham Cathedral']]
+  ])},
+  {id:'counties',name:'Cities & counties',blurb:'Which county is the city in?',gen:pool([
+    ['Gloucester','Gloucestershire'],['Oxford','Oxfordshire'],['Cambridge','Cambridgeshire'],['Norwich','Norfolk'],['Ipswich','Suffolk'],
+    ['Exeter','Devon'],['Truro','Cornwall'],['Canterbury','Kent'],['Lincoln','Lincolnshire'],['Chester','Cheshire'],['Lancaster','Lancashire'],
+    ['Derby','Derbyshire'],['Nottingham','Nottinghamshire'],['Dorchester','Dorset'],['Durham','County Durham']
+  ],'which county?')},
+  {id:'monarchs',name:'Kings & queens',blurb:'Monarchs of England.',gen:pool([
+    ['Anglo-Saxon king who fought the Vikings','Alfred the Great'],['Last Anglo-Saxon king, killed in 1066','Harold II'],
+    ['First Norman king, won at Hastings','William the Conqueror'],['Sealed Magna Carta in 1215','King John'],
+    ['Won the Battle of Agincourt in 1415','Henry V'],['First Tudor king','Henry VII'],['Married six times','Henry VIII'],
+    ['Last Tudor monarch','Elizabeth I'],['King executed in 1649','Charles I'],['Became king in 2022','Charles III']
+  ],'which monarch?')},
+]},
+{id:'wales',name:'Wales',native:'Cymru',curric:'Curriculum for Wales',topics:[
+  {id:'facts',name:'Wales facts',blurb:'Ffeithiau am Gymru.',gen:explicit([
+    ['Capital city of Wales','Cardiff',['Swansea','Newport','Bangor']],
+    ['Patron saint of Wales','St David',['St George','St Andrew','St Patrick']],
+    ["St David's Day is on…",'1 March',['23 April','17 March','30 November']],
+    ['Creature on the Welsh flag','Red dragon',['Lion','Unicorn','Eagle']],
+    ['National flower of Wales','Daffodil',['Rose','Thistle','Shamrock']],
+    ['Vegetable worn as a Welsh emblem','Leek',['Carrot','Potato','Onion']],
+    ['Highest mountain in Wales','Yr Wyddfa (Snowdon)',['Pen y Fan','Cadair Idris','Ben Nevis']],
+    ['Name of the Welsh Parliament','Senedd',['Stormont','Holyrood','Westminster']],
+    ['Largest natural lake in Wales','Llyn Tegid (Bala Lake)',['Llyn Padarn','Llyn Brianne','Lough Neagh']],
+    ['Welsh national anthem','Hen Wlad Fy Nhadau',['Flower of Scotland','Danny Boy','Jerusalem']]
+  ])},
+  {id:'places',name:'Welsh place names',blurb:'English name → Welsh name.',gen:pool([
+    ['Wales','Cymru'],['Cardiff','Caerdydd'],['Swansea','Abertawe'],['Newport','Casnewydd'],['Snowdonia','Eryri'],
+    ['Anglesey','Ynys Môn'],['Brecon Beacons','Bannau Brycheiniog'],['Carmarthen','Caerfyrddin'],['Holyhead','Caergybi']
+  ],'in Welsh?')},
+  {id:'words',name:'Welsh words',blurb:'Geiriau Cymraeg.',gen:pool([
+    ['Bore da','Good morning'],['Nos da','Good night'],['Diolch','Thank you'],['Croeso','Welcome'],
+    ['Cath','Cat'],['Ci','Dog'],['Afal','Apple'],['Ysgol','School'],['Mam','Mum'],['Dŵr','Water'],['Haul','Sun'],['Draig','Dragon']
+  ],'what does it mean?')},
+  {id:'nums',name:'Numbers & colours',blurb:'Rhifau a lliwiau.',gen:pool([
+    ['Un','One'],['Dau','Two'],['Tri','Three'],['Pedwar','Four'],['Pump','Five'],['Chwech','Six'],['Deg','Ten'],
+    ['Coch','Red'],['Glas','Blue'],['Gwyrdd','Green'],['Melyn','Yellow'],['Du','Black'],['Gwyn','White']
+  ],'in English?')},
+]},
+{id:'scotland',name:'Scotland',native:'Alba',curric:'Curriculum for Excellence · P1–P7',topics:[
+  {id:'facts',name:'Scotland facts',blurb:'Saltire, thistle and lochs.',gen:explicit([
+    ['Capital city of Scotland','Edinburgh',['Glasgow','Aberdeen','Dundee']],
+    ['Largest city in Scotland','Glasgow',['Edinburgh','Aberdeen','Inverness']],
+    ['Patron saint of Scotland','St Andrew',['St George','St David','St Patrick']],
+    ["St Andrew's Day is on…",'30 November',['1 March','23 April','25 January']],
+    ['The Saltire is…','White cross on blue',['Red cross on white','Red dragon on green','Gold harp on blue']],
+    ['National animal of Scotland','Unicorn',['Stag','Golden eagle','Lion']],
+    ['National flower of Scotland','Thistle',['Heather','Rose','Daffodil']],
+    ['Longest river in Scotland','River Tay',['River Clyde','River Forth','River Spey']],
+    ['Largest loch by area','Loch Lomond',['Loch Ness','Loch Tay','Loch Awe']],
+    ['Burns Night is on…','25 January',['30 November','5 November','1 March']],
+    ['Where the Scottish Parliament meets','Holyrood',['Stormont','Senedd','Westminster']]
+  ])},
+  {id:'history',name:'Scottish history',blurb:'Battles, kings and inventors.',gen:pool([
+    ['Won the Battle of Bannockburn in 1314','Robert the Bruce'],['Won the Battle of Stirling Bridge in 1297','William Wallace'],
+    ['Became king of England too in 1603','James VI'],['Queen of Scots executed in 1587','Mary, Queen of Scots'],
+    ['Lost the Battle of Culloden in 1746','Bonnie Prince Charlie'],['Wrote "Auld Lang Syne"','Robert Burns'],
+    ['Showed the first working television','John Logie Baird'],['Discovered penicillin','Alexander Fleming'],['Improved the steam engine','James Watt']
+  ],'who was it?')},
+  {id:'scots',name:'Scots words',blurb:'Braw words fae Scotland.',gen:pool([
+    ['wee','small'],['bairn','child'],['dreich','dull, wet weather'],['ken','know'],['braw','fine, good'],['glaikit','silly, foolish'],
+    ['greet','cry'],['kirk','church'],['burn','stream'],['bonnie','pretty'],['loch','lake']
+  ],'what does it mean?')},
+  {id:'gaelic',name:'Gaelic words',blurb:'Faclan Gàidhlig.',gen:pool([
+    ['Alba','Scotland'],['Fàilte','Welcome'],['Tapadh leat','Thank you'],['Madainn mhath','Good morning'],['Oidhche mhath','Good night'],
+    ['Uisge','Water'],['Cù','Dog'],['Taigh','House'],['Sgoil','School'],['Beinn','Mountain']
+  ],'in English?')},
+]},
+{id:'ni',name:'Northern Ireland',native:'Tuaisceart Éireann',curric:'Northern Ireland Curriculum · P1–P7',topics:[
+  {id:'facts',name:'Northern Ireland facts',blurb:'Loughs, causeways and the Titanic.',gen:explicit([
+    ['Capital city of Northern Ireland','Belfast',['Derry~Londonderry','Armagh','Newry']],
+    ['Largest lake in the UK','Lough Neagh',['Lough Erne','Loch Ness','Strangford Lough']],
+    ['Highest mountain in Northern Ireland','Slieve Donard',['Slieve Gullion','Ben Nevis','Scafell Pike']],
+    ["The Giant's Causeway is in County…",'Antrim',['Fermanagh','Tyrone','Armagh']],
+    ['Famous ship built in Belfast','Titanic',['Mary Rose','Victory','Cutty Sark']],
+    ['River that flows through Belfast','River Lagan',['River Bann','River Foyle','River Erne']],
+    ['Longest river in Northern Ireland','River Bann',['River Lagan','River Foyle','River Erne']],
+    ['Where the Northern Ireland Assembly meets','Stormont',['Holyrood','Senedd','Westminster']],
+    ["St Patrick's Day is on…",'17 March',['1 March','23 April','30 November']],
+    ['Belfast-born author of the Narnia books','C. S. Lewis',['Roald Dahl','J. K. Rowling','Lewis Carroll']]
+  ])},
+  {id:'counties',name:'The six counties',blurb:'Which county is the town in?',gen:fixed([
+    ['Ballymena','Antrim'],['Larne','Antrim'],['Enniskillen','Fermanagh'],['Lisnaskea','Fermanagh'],['Omagh','Tyrone'],['Dungannon','Tyrone'],['Strabane','Tyrone'],
+    ['Armagh','Armagh'],['Portadown','Armagh'],['Coleraine','Londonderry'],['Limavady','Londonderry'],['Downpatrick','Down'],['Bangor','Down']
+  ],['Antrim','Armagh','Down','Fermanagh','Londonderry','Tyrone'],'which county?')},
+  {id:'irish',name:'Irish words',blurb:'Focail Ghaeilge.',gen:pool([
+    ['Dia dhuit','Hello'],['Go raibh maith agat','Thank you'],['Slán','Goodbye'],['Fáilte','Welcome'],['Oíche mhaith','Good night'],
+    ['Madra','Dog'],['Uisce','Water'],['Scoil','School'],['Teach','House'],['Lá','Day']
+  ],'in English?')},
+]},
+];
+// Secondary "Where in the UK?" reuses the primary question set.
+SECONDARY.find(s=>s.id==='uk').topics.find(t=>t.id==='where').gen=SUBJECTS.find(s=>s.id==='uk').topics.find(t=>t.id==='where').gen;
+
+const LEVELS={primary:{label:'Primary',sub:'Ages 4–11',subjects:SUBJECTS},secondary:{label:'Secondary',sub:'Ages 11–16',subjects:SECONDARY}};
+const CURRIC={
+  england:{primary:'National Curriculum · KS1–KS2 · Years 1–6',secondary:'National Curriculum · KS3–KS4 · Years 7–11'},
+  wales:{primary:'Curriculum for Wales · Years 1–6',secondary:'Curriculum for Wales · Years 7–11'},
+  scotland:{primary:'Curriculum for Excellence · P1–P7',secondary:'Curriculum for Excellence · S1–S6'},
+  ni:{primary:'Northern Ireland Curriculum · P1–P7',secondary:'Northern Ireland Curriculum · Years 8–12'}};
+let level='primary';
+const subjects=()=>LEVELS[level].subjects;
+const isCountry=p=>COUNTRIES.includes(p);
+const packById=id=>[...subjects(),...COUNTRIES].find(p=>p.id===id);
+const scopeOf=p=>isCountry(p)?'all':level;
+
+/* ---------- Local storage ---------- */
+const store={get(k,d){try{const v=localStorage.getItem('bdash:'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('bdash:'+k,JSON.stringify(v))}catch(e){}}};
+
+/* ---------- Sign-in & leaderboard ----------
+   Inside claude.ai  → Claude account + shared artifact database.
+   On your website   → Supabase email sign-in (if configured above).
+   Otherwise         → scores stay on this device.                      */
+const DEFAULT_AVATAR="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><rect width="36" height="36" fill="#8A97AD"/><circle cx="18" cy="14" r="6" fill="#fff"/><path d="M6 32c2-7 7-10 12-10s10 3 12 10" fill="#fff"/></svg>');
+let BACKEND='local',UID=null,canPost=true,ROWS=[],MYDOC=null,USER=null,DB=null,SB=null;
+const boardKey=(k,secs)=>`${k.replace(/\//g,'-')}-${secs}`;
+function topFor(k,n=5){return ROWS.filter(r=>r.key===k&&r.s>0).sort((a,b)=>b.s-a.s).slice(0,n)}
+function myBest(k){const local=store.get('best:'+k,0);const mine=UID&&ROWS.find(r=>r.key===k&&r.id===UID);return Math.max(local,mine?mine.s:0)}
+async function names(ids){
+  if(!ids.length)return{};
+  if(BACKEND==='claude'&&USER){try{return await USER.profiles(ids)}catch(e){return{}}}
+  const m={};ROWS.forEach(r=>{if(ids.includes(r.id)&&r.name)m[r.id]={name:r.name,avatarUrl:DEFAULT_AVATAR}});return m;
+}
+function setWho(name,note){$('whoName').textContent=name;$('whoNote').textContent=note}
+
+async function initClaude(){
+  try{USER=await window.claude.use('user')}catch(e){}
+  if(USER){const me=await USER.me();UID=me.id;$('avatar').src=me.avatarUrl||DEFAULT_AVATAR;
+    if(UID){BACKEND='claude';setWho(me.name||'Signed in','Signed in with Claude · on the leaderboard')}
+    if(await USER.can('data.write')===false)canPost=false;}
+  try{DB=await window.claude.use('db')}catch(e){}
+  if(DB){BACKEND='claude';
+    DB.collection('scores').onSnapshot(snap=>{
+      const rows=[];MYDOC=null;
+      snap.docs.forEach(d=>{const data=d.data()||{};if(d.id===UID)MYDOC=data;const b=data.best||{};for(const k in b)rows.push({id:d.id,key:k,s:b[k]})});
+      ROWS=rows;renderStats();renderTopicMeta();
+    },()=>{});
+  }
+}
+function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+async function initSupabase(){
+  try{await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js')}
+  catch(e){setWho('Guest player','Could not reach the leaderboard. Scores are saved on this device.');return}
+  SB=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);BACKEND='supabase';
+  $('authBtn').hidden=false;
+  const {data}=await SB.auth.getSession();setSbUser(data.session?.user);
+  SB.auth.onAuthStateChange((_e,s)=>setSbUser(s?.user));
+  loadRows();
+}
+function setSbUser(u){
+  UID=u?.id||null;
+  if(u){setWho(u.user_metadata?.display_name||'Player','Signed in · on the leaderboard');$('authBtn').textContent='Sign out';$('authForm').hidden=true}
+  else{setWho('Guest player','Sign in to join the leaderboard');$('authBtn').textContent='Sign in'}
+  renderStats();renderTopicMeta();
+}
+async function loadRows(){
+  const {data,error}=await SB.from('scores').select('user_id,name,board_key,score').order('score',{ascending:false}).limit(2000);
+  if(!error&&data){ROWS=data.map(r=>({id:r.user_id,key:r.board_key,s:r.score,name:r.name}));renderTopicMeta()}
+}
+async function postScore(key,score){
+  if(!UID)return 'local';
+  if(BACKEND==='claude'){
+    if(!DB||!canPost)return 'fail';
+    const prev=MYDOC||{best:{},games:0,correct:0};
+    const best={...(prev.best||{})};if(score>(best[key]||0))best[key]=score;
+    try{await DB.doc('scores/'+UID).set({best,games:(prev.games||0)+1,correct:(prev.correct||0)+score,updated:Date.now()});return 'ok'}
+    catch(e){if(e&&e.code==='invalid_argument')canPost=false;return 'fail'}
+  }
+  if(BACKEND==='supabase'){
+    const mine=ROWS.find(r=>r.key===key&&r.id===UID);if(mine&&mine.s>=score)return 'ok';
+    const {data}=await SB.auth.getUser();const name=(data.user?.user_metadata?.display_name||'Player').slice(0,24);
+    const {error}=await SB.from('scores').upsert({user_id:UID,board_key:key,name,score,updated_at:new Date().toISOString()},{onConflict:'user_id,board_key'});
+    if(error)return 'fail';await loadRows();return 'ok';
+  }
+  return 'local';
+}
+function initAuthUi(){
+  $('authBtn').onclick=async()=>{if(BACKEND!=='supabase')return;
+    if(UID){await SB.auth.signOut();return}
+    const f=$('authForm');f.hidden=!f.hidden;if(!f.hidden)$('authName').focus()};
+  $('authForm').addEventListener('submit',async e=>{e.preventDefault();if(!SB)return;
+    const name=$('authName').value.trim().slice(0,24),email=$('authEmail').value.trim(),msg=$('authMsg'),btn=$('authSend');
+    if(!name||!email)return;btn.disabled=true;msg.textContent='Sending…';
+    const {error}=await SB.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname,data:{display_name:name}}});
+    btn.disabled=false;
+    msg.textContent=error?`That didn't work: ${error.message}. Check the email address and try again.`:`Link sent to ${email}. Open it on this device to sign in.`});
+}
+async function initCloud(){
+  initAuthUi();
+  if(window.claude?.use){await initClaude();return}
+  if(SUPABASE_URL&&SUPABASE_ANON_KEY){await initSupabase();return}
+  setWho('Guest player','Scores are saved on this device');
+}
+function renderStats(){
+  let g,c,b;
+  if(BACKEND==='claude'&&UID){g=MYDOC?.games||0;c=MYDOC?.correct||0;b=Object.keys(MYDOC?.best||{}).length}
+  else{g=store.get('games',0);c=store.get('correct',0);b=store.get('bests',0)}
+  $('mystats').hidden=!g;$('stGames').textContent=g;$('stCorrect').textContent=c;$('stBests').textContent=b;
+}
+/* ---------- Home ---------- */
+const $=id=>document.getElementById(id);
+const root=document.documentElement;
+level=store.get('level','primary');if(!LEVELS[level])level='primary';
+let current=store.get('pack','maths');if(!packById(current))current='maths';
+let roundSecs=store.get('round',60);if(![30,60,90,0].includes(roundSecs))roundSecs=60;
+const setColor=id=>root.style.setProperty('--sc',`var(--${id})`);
+
+function renderRound(){
+  const box=$('round');box.innerHTML='';
+  [[30,'30s'],[60,'60s'],[90,'90s'],[0,'Practice']].forEach(([v,l])=>{
+    const b=document.createElement('button');b.type='button';b.textContent=l;b.setAttribute('aria-pressed',v===roundSecs);
+    b.onclick=()=>{roundSecs=v;store.set('round',v);renderRound();renderTopics()};box.appendChild(b)});
+}
+function renderLevels(){
+  const box=$('levels');box.innerHTML='';
+  Object.entries(LEVELS).forEach(([id,L])=>{const b=document.createElement('button');b.type='button';b.className='lvl';
+    b.setAttribute('aria-pressed',id===level);b.innerHTML='<b></b><small></small>';
+    b.querySelector('b').textContent=L.label;b.querySelector('small').textContent=L.sub;
+    b.onclick=()=>{level=id;store.set('level',id);if(!packById(current))current='maths';renderHome()};box.appendChild(b)});
+}
+function renderCountries(){
+  const box=$('countries');box.innerHTML='';
+  COUNTRIES.forEach(c=>{const b=document.createElement('button');b.type='button';b.className='country';
+    b.style.setProperty('--c',`var(--${c.id})`);b.setAttribute('aria-pressed',current===c.id);
+    b.innerHTML=`<b></b><i></i><small></small>`;
+    b.querySelector('b').textContent=c.name;b.querySelector('i').textContent=c.native!==c.name?c.native:'Home of the Three Lions';
+    b.querySelector('small').textContent=`${c.topics.length} topics`;
+    b.onclick=()=>{select(c.id);$('packName').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})};
+    box.appendChild(b)});
+}
+function renderTabs(){
+  const box=$('tabs');box.innerHTML='';
+  subjects().forEach(s=>{const b=document.createElement('button');b.type='button';b.className='tab';b.setAttribute('role','tab');
+    b.setAttribute('aria-selected',s.id===current);b.style.setProperty('--c',`var(--${s.id})`);
+    b.innerHTML='<i></i>';b.append(s.name);b.onclick=()=>select(s.id);box.appendChild(b)});
+}
+function select(id){current=id;store.set('pack',id);renderHome()}
+function renderTopics(){
+  const p=packById(current);const box=$('topics');box.innerHTML='';
+  $('packName').textContent=p.name;$('packNote').textContent=isCountry(p)?`${CURRIC[p.id][level]} · ${p.topics.length} topics`:`${LEVELS[level].label} · ${p.topics.length} topics`;
+  const sc=scopeOf(p);
+  p.topics.forEach(t=>{
+    const card=document.createElement('article');card.className='topic';
+    card.innerHTML='<h4></h4><p></p>';card.querySelector('h4').textContent=t.name;card.querySelector('p').textContent=t.blurb;
+    if(t.variants){
+      const chips=document.createElement('div');chips.className='chips';
+      t.variants.forEach(v=>{const c=document.createElement('button');c.type='button';c.className='chip';c.textContent=v.label;
+        const k=boardKey(`${sc}/${p.id}/${t.id}/${v.key}`,roundSecs);const vb=myBest(k);if(vb&&roundSecs)c.title=`Your best: ${vb}`;
+        c.onclick=()=>start(p,`${t.name}: ${v.label}`,v.gen,`${sc}/${p.id}/${t.id}/${v.key}`);chips.appendChild(c)});
+      card.appendChild(chips);
+    }else{
+      const meta=document.createElement('div');meta.className='meta';meta.dataset.key=boardKey(`${sc}/${p.id}/${t.id}`,roundSecs);card.appendChild(meta);
+      const b=document.createElement('button');b.type='button';b.className='play';b.textContent='Play';
+      b.onclick=()=>start(p,t.name,t.gen,`${sc}/${p.id}/${t.id}`);card.appendChild(b);
+    }
+    box.appendChild(card);
+  });
+  renderTopicMeta();
+}
+async function renderTopicMeta(){
+  const metas=[...document.querySelectorAll('.meta[data-key]')];if(!roundSecs){metas.forEach(m=>m.textContent='Practice: no scores kept');return}
+  const tops=metas.map(m=>topFor(m.dataset.key,1)[0]);const ps=await names(tops.filter(Boolean).map(t=>t.id));
+  metas.forEach((m,i)=>{m.innerHTML='';const mb=myBest(m.dataset.key);
+    if(mb){const s=document.createElement('span');s.textContent=`Your best: ${mb}`;m.appendChild(s)}
+    const t=tops[i];if(t){const s=document.createElement('span');s.className='top';s.textContent=`Top: ${(ps[t.id]?.name)||'A player'} ${t.s}`;m.appendChild(s)}});
+}
+function renderHome(){setColor(current);renderLevels();renderCountries();renderTabs();renderTopics()}
+
+/* ---------- Game ---------- */
+let G=null,timers=[];
+const later=(f,ms)=>{const id=setTimeout(f,ms);timers.push(id);return id};
+function clearAll(){timers.forEach(clearTimeout);timers=[];if(G&&G.raf)cancelAnimationFrame(G.raf)}
+
+function start(p,title,gen,baseKey){
+  clearAll();
+  const secs=roundSecs;
+  G={p,title,gen,baseKey,secs,key:boardKey(baseKey,secs),score:0,tries:0,running:false,lock:false,last:null};
+  setColor(p.id);
+  $('home').hidden=true;$('game').hidden=false;$('end').hidden=true;
+  $('gtitle').textContent=`${p.name} · ${title}`;
+  $('score').textContent='0';
+  $('timer').hidden=!secs;$('done').hidden=!!secs;
+  $('secs').textContent=secs||'∞';$('secsLabel').textContent=secs?'Secs':'Practice';
+  $('tfill').style.width='100%';$('timer').classList.remove('low');
+  next();
+  const cd=$('countdown'),n=$('countn');cd.hidden=false;let c=3;
+  const step=()=>{if(c===0){cd.hidden=true;go();return}n.textContent=c;n.style.animation='none';void n.offsetWidth;n.style.animation='';c--;later(step,600)};
+  step();
+}
+function go(){
+  G.running=true;if(!G.secs)return;
+  const total=G.secs*1000;G.end=performance.now()+total;
+  const tick=()=>{const left=Math.max(0,G.end-performance.now());
+    $('tfill').style.width=(left/total*100)+'%';$('secs').textContent=Math.ceil(left/1000);
+    $('timer').classList.toggle('low',left<10000);
+    if(left<=0){finish();return}G.raf=requestAnimationFrame(tick)};
+  tick();
+}
+function next(){
+  let c,t=0;do{c=G.gen()}while(c.q===G.last&&t++<8);G.last=c.q;G.cur=c;
+  const q=$('q');q.textContent=c.q;q.classList.toggle('long',String(c.q).length>16);
+  const h=$('qhint');h.hidden=!c.hint;h.textContent=c.hint||'';
+  const k=$('keys');k.innerHTML='';
+  const opts=c.opts.map(String),n=opts.length,longest=Math.max(...opts.map(o=>o.length)),textual=longest>5;
+  let cols=n===16?4:n>=16?5:n===10?5:n>6?4:n===4?4:3;
+  if(textual)cols=longest>13?2:(n>4?3:2);
+  else if(n<=3)cols=n;
+  k.style.setProperty('--cols',cols);k.classList.toggle('text',textual);
+  opts.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='key';b.textContent=o;
+    b.onclick=()=>press(b,o);k.appendChild(b)});
+}
+function press(b,o){
+  if(!G||!G.running||G.lock)return;
+  G.tries++;
+  if(o===String(G.cur.a)){
+    G.score++;G.lock=true;b.classList.add('hit');
+    const sc=$('score');sc.textContent=G.score;sc.classList.remove('bump');void sc.offsetWidth;sc.classList.add('bump');
+    later(()=>{G.lock=false;if(G.running)next()},140);
+  }else{
+    b.classList.remove('miss');void b.offsetWidth;b.classList.add('miss');
+    later(()=>b.classList.remove('miss'),420);
+    if(!G.secs){[...$('keys').children].forEach(x=>{if(x.textContent===String(G.cur.a))x.classList.add('reveal')})}
+  }
+}
+async function finish(){
+  G.running=false;clearAll();
+  const practice=!G.secs;
+  $('endTitle').textContent=practice?'Practice done':"Time's up!";
+  $('final').textContent=G.score;
+  $('acc').textContent=G.tries?Math.round(G.score/G.tries*100)+'%':'–';
+  const prev=myBest(G.key),isBest=!practice&&G.score>prev&&G.score>0;
+  $('best').textContent=practice?'–':Math.max(prev,G.score);
+  $('newbest').hidden=!isBest;$('board').hidden=true;$('endNote').hidden=true;
+  $('end').hidden=false;$('again').focus();
+  if(practice)return;
+  if(isBest)store.set('best:'+G.key,G.score);
+  store.set('games',store.get('games',0)+1);store.set('correct',store.get('correct',0)+G.score);
+  if(isBest&&!prev)store.set('bests',store.get('bests',0)+1);
+  const res=await postScore(G.key,G.score);
+  const note=$('endNote');
+  if(!UID){note.textContent=BACKEND==='supabase'?'Sign in at the top of the page to put your scores on the leaderboard.':BACKEND==='claude'?'Open this page while signed in to claude.ai to join the leaderboard.':'Your score is saved on this device.';note.hidden=false}
+  else if(res!=='ok'){note.textContent=BACKEND==='claude'?'Your score is saved on this device. To post scores, ask the page owner for Contributor access.':'Could not reach the leaderboard. Your score is saved on this device.';note.hidden=false}
+  renderStats();
+  await renderBoard(G.key);
+}
+async function renderBoard(key){
+  const rows=topFor(key,5);if(!rows.length)return;
+  const ps=await names(rows.map(r=>r.id));const ol=$('boardList');ol.innerHTML='';
+  $('boardTitle').textContent=`Top players · ${G.secs}s rounds`;
+  rows.forEach((r,i)=>{const li=document.createElement('li');if(r.id===UID)li.className='me';
+    const n=document.createElement('span');n.className='n';n.textContent=i+1;
+    const img=document.createElement('img');img.alt='';img.src=ps[r.id]?.avatarUrl||DEFAULT_AVATAR;
+    const nm=document.createElement('span');nm.className='nm';nm.textContent=(ps[r.id]?.name)||(r.id===UID?'You':'A player');
+    const b=document.createElement('b');b.textContent=r.s;li.append(n,img,nm,b);ol.appendChild(li)});
+  $('board').hidden=false;
+}
+function home(){clearAll();if(G)G.running=false;$('game').hidden=true;$('home').hidden=false;renderHome()}
+$('quit').onclick=home;$('other').onclick=home;$('done').onclick=()=>{if(G&&G.running)finish()};
+$('again').onclick=()=>{const p=G.p;roundSecs=G.secs;start(p,G.title,G.gen,G.baseKey)};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('game').hidden)home()});
+
+$('avatar').src=DEFAULT_AVATAR;
+renderRound();renderHome();renderStats();initCloud();
+})();
+</script>
+
+</body>
+</html>
