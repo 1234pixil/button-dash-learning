@@ -156,6 +156,16 @@ h2.sec{font-family:var(--f-display);font-weight:800;font-size:.8rem;letter-spaci
 .authform input{font:inherit;font-size:1rem;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
 .authform input:focus-visible{outline:3px solid var(--sc);outline-offset:1px}
 .authmsg{flex-basis:100%;margin:0;font-size:.88rem;color:var(--muted)}
+.mtabs{display:flex;flex-wrap:wrap;gap:6px;flex-basis:100%}
+.mtab{padding:7px 12px;border-radius:99px;border:2px solid var(--line);background:var(--bg);font-weight:700;font-size:.9rem}
+.mtab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.oauth{padding:12px 22px;border-radius:12px;border:2px solid var(--ink);background:var(--surface);font-family:var(--f-display);font-weight:800;font-size:1.05rem}
+.dob{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px;flex-basis:100%;min-width:0}
+.dob legend{font-size:.78rem;font-weight:700;color:var(--muted);padding:0;margin-bottom:4px}
+.dob label{flex:1 1 90px}
+.newp select{font:inherit;font-size:1rem;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.authmsg.err{color:var(--miss);font-weight:700}
+.authmsg.ok{color:var(--hit);font-weight:700}
 .panel-h{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.25rem;flex-basis:100%}
 .players{display:flex;flex-wrap:wrap;gap:8px;flex-basis:100%}
 .pl{display:flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:99px;border:2px solid var(--line);background:var(--bg);font-weight:700}
@@ -168,6 +178,35 @@ h2.sec{font-family:var(--f-display);font-weight:800;font-size:.8rem;letter-spaci
 #authBtn{margin:0;align-self:center;font-size:1.05rem;padding:11px 22px}
 #createBtn{align-self:center;font-size:1.05rem;padding:10px 18px;border-color:var(--sc);font-family:var(--f-display);font-weight:800}
 .linkbtn{border:0;background:none;padding:0;color:var(--sc);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+
+/* Lessons */
+#lesson{position:fixed;inset:0;background:var(--bg);overflow:auto;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.lessonbody{max-width:860px;width:100%;margin:0 auto;padding:8px 16px 120px;display:flex;flex-direction:column;gap:16px}
+.leyebrow{margin:0;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.ltitle{font-family:var(--f-display);font-weight:800;font-size:clamp(1.8rem,5vw,2.6rem);margin:0;color:var(--sc);line-height:1.05;text-wrap:balance}
+.lintro{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.lintro p{margin:0;max-width:65ch;font-size:1.05rem}
+.lintro h3{margin:0;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.lex{display:flex;flex-wrap:wrap;gap:8px}
+.lex span{background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:6px 12px;font-family:var(--f-display);font-weight:800;font-variant-numeric:tabular-nums}
+.lfacts-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.lfacts-head h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.25rem}
+.ltoggle{display:flex;gap:8px;align-items:center;font-weight:700;color:var(--muted);font-size:.92rem;cursor:pointer}
+.ltoggle input{width:18px;height:18px;accent-color:var(--sc)}
+.facts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.fact{background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:4px;min-width:0;font:inherit;color:inherit}
+.fact .fq{color:var(--muted);font-size:.92rem;overflow-wrap:anywhere}
+.fact .fa{font-family:var(--f-display);font-weight:800;font-size:1.15rem;overflow-wrap:anywhere;border-radius:6px}
+.hideans .fact .fa{color:transparent;background:var(--line)}
+.hideans .fact.shown .fa{color:var(--ink);background:transparent}
+.lnote{color:var(--muted);margin:0}
+.lfoot{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:2px solid var(--line);display:flex;justify-content:center;gap:10px}
+.lfoot .play{margin:0;font-size:1.15rem;padding:12px 28px}
+.chip[aria-pressed="true"]{background:var(--sc);color:#fff;border-color:var(--sc)}
+.cardbtns{display:flex;gap:8px;align-items:center;margin-top:auto;flex-wrap:wrap}
+.cardbtns .play{margin-top:0}
+.learn{padding:8px 16px;border-radius:12px;border:2px solid var(--sc);background:transparent;font-family:var(--f-display);font-weight:800;color:var(--ink)}
+.chips + .learn{align-self:flex-start;margin-top:4px}
 @media (max-width:480px){ .keys{gap:8px} .stat b{font-size:1.3rem} .mystats{gap:10px} }
 @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
 </style>
@@ -184,13 +223,7 @@ h2.sec{font-family:var(--f-display);font-weight:800;font-size:.8rem;letter-spaci
       <button class="ghost" id="createBtn" type="button">Create account</button>
     </div>
   </div>
-  <form class="authform" id="authForm" hidden>
-    <label for="authName">Leaderboard name<input id="authName" maxlength="24" autocomplete="nickname" placeholder="e.g. Sam J" required></label>
-    <label for="authEmail">Email<input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required></label>
-    <button class="play" type="submit" id="authSend">Email me a sign-in link</button>
-    <p class="authmsg" id="authMsg">We'll email you a link. Tap it and you're signed in, no password needed. Use a first name or nickname, not your full name.</p>
-  </form>
-  <div class="authform" id="localPanel" hidden></div>
+  <div class="authform" id="acctPanel" hidden role="region" aria-label="Account"></div>
   <header class="mast">
     <div>
       <h1 class="brand">Button<span> Dash</span> UK</h1>
@@ -210,6 +243,22 @@ h2.sec{font-family:var(--f-display);font-weight:800;font-size:.8rem;letter-spaci
 
   <div class="packhead"><h3 id="packName"></h3><span id="packNote"></span></div>
   <section class="topics" id="topics"></section>
+</div>
+
+<div id="lesson" hidden>
+  <div class="bar">
+    <button class="back" id="lessonBack" type="button">← Topics</button>
+    <div class="gtitle" id="ltop">Lesson</div>
+  </div>
+  <main class="lessonbody">
+    <div><p class="leyebrow" id="lkicker"></p><h2 class="ltitle" id="lname"></h2></div>
+    <section class="lintro" id="lintro"></section>
+    <div class="chips" id="lvariants" hidden></div>
+    <div class="lfacts-head" id="lfhead"><h3>Key facts</h3><label class="ltoggle" for="lhide"><input type="checkbox" id="lhide"> Hide answers to test yourself</label></div>
+    <div class="facts-grid" id="lfacts"></div>
+    <p class="lnote" id="lnote" hidden>This topic makes brand-new questions every time, so there is no fixed list to learn. Use the method and examples above, then try the quiz.</p>
+  </main>
+  <div class="lfoot"><button class="play" id="lstart" type="button">Start quiz</button></div>
 </div>
 
 <div id="game" hidden>
@@ -266,23 +315,24 @@ function near(a,step,lo,hi,count,extra=[]){
   let t=0;while(s.size<count&&t++<600){const v=a+step*rand(-9,9);if(v>=lo&&v<=hi)s.add(v)}
   return [...s].sort((x,y)=>x-y);
 }
-const fixed=(items,choices,hint)=>()=>{const [q,a]=pick(items);return{q,a,opts:choices,hint}};
-const pool=(items,hint,n=6)=>()=>{const [q,a]=pick(items);
+const withItems=(fn,items)=>{fn.items=items;return fn};
+const fixed=(items,choices,hint)=>withItems(()=>{const [q,a]=pick(items);return{q,a,opts:choices,hint}},items.map(([q,a])=>[q,a]));
+const pool=(items,hint,n=6)=>withItems(()=>{const [q,a]=pick(items);
   const others=shuffle([...new Set(items.map(i=>String(i[1])).filter(x=>x!==String(a)))]).slice(0,n-1);
-  return{q,a,opts:shuffle([a,...others]),hint}};
-const explicit=(items,hint)=>()=>{const [q,a,w]=pick(items);return{q,a,opts:shuffle([a,...w]),hint}};
+  return{q,a,opts:shuffle([a,...others]),hint}},items.map(([q,a])=>[q,a]));
+const explicit=(items,hint)=>withItems(()=>{const [q,a,w]=pick(items);return{q,a,opts:shuffle([a,...w]),hint}},items.map(([q,a])=>[q,a]));
 
 /* ---------- Maths generators ---------- */
-const table=n=>()=>{const k=rand(1,12);return{q:`${k} × ${n}`,a:k*n,opts:range(1,12).map(i=>i*n)}};
+const table=n=>withItems(()=>{const k=rand(1,12);return{q:`${k} × ${n}`,a:k*n,opts:range(1,12).map(i=>i*n)}},range(1,12).map(k=>[`${k} × ${n}`,k*n]));
 const mixedTable=()=>{const n=rand(2,12),k=rand(1,12),a=n*k;return{q:`${k} × ${n}`,a,opts:near(a,1,1,144,12,[(k+1)*n,(k-1)*n,k*(n+1),k*(n-1),a+10,a-10])}};
-const divide=n=>()=>{const k=rand(1,12);return{q:`${k*n} ÷ ${n}`,a:k,opts:range(1,12)}};
+const divide=n=>withItems(()=>{const k=rand(1,12);return{q:`${k*n} ÷ ${n}`,a:k,opts:range(1,12)}},range(1,12).map(k=>[`${k*n} ÷ ${n}`,k]));
 const mixedDivide=()=>divide(rand(2,12))();
-const bond10=()=>{const k=rand(0,9);return{q:`${k} + ? = 10`,a:10-k,opts:range(1,10)}};
-const bond20=()=>{const k=rand(0,19);return{q:`${k} + ? = 20`,a:20-k,opts:range(1,20)}};
+const bond10=withItems(()=>{const k=rand(0,9);return{q:`${k} + ? = 10`,a:10-k,opts:range(1,10)}},range(0,10).map(k=>[`${k} + ${10-k}`,10]));
+const bond20=withItems(()=>{const k=rand(0,19);return{q:`${k} + ? = 20`,a:20-k,opts:range(1,20)}},range(0,10).map(k=>[`${k} + ${20-k}`,20]));
 const bond100=()=>{const k=rand(1,19)*5;return{q:`${k} + ? = 100`,a:100-k,opts:near(100-k,5,5,95,12)}};
 const doubles=()=>{const k=rand(2,50);return{q:`Double ${k}`,a:2*k,opts:near(2*k,2,2,100,12,[2*k+10,2*k-10])}};
 const halves=()=>{const k=rand(1,50)*2;return{q:`Half of ${k}`,a:k/2,opts:near(k/2,1,1,50,12,[k/2+5,k/2-5])}};
-const squares=()=>{const k=rand(1,12);return{q:`${k}²`,a:k*k,opts:range(1,12).map(i=>i*i),hint:'square number'}};
+const squares=withItems(()=>{const k=rand(1,12);return{q:`${k}²`,a:k*k,opts:range(1,12).map(i=>i*i),hint:'square number'}},range(1,12).map(k=>[`${k}²`,k*k]));
 const add20=()=>{const a=rand(1,12),b=rand(1,8);return{q:`${a} + ${b}`,a:a+b,opts:near(a+b,1,2,20,12)}};
 const add100=()=>{const a=rand(11,79),b=rand(5,20),s=a+b;return{q:`${a} + ${b}`,a:s,opts:near(s,1,1,100,12,[s+10,s-10])}};
 const sub100=()=>{const a=rand(25,99),b=rand(5,24),s=a-b;return{q:`${a} − ${b}`,a:s,opts:near(s,1,1,99,12,[s+10,s-10])}};
@@ -312,9 +362,9 @@ const bidmas=()=>{const f=rand(0,3);let a=rand(2,12),b=rand(2,9),c=rand(2,9),q,v
 const gcd=(a,b)=>b?gcd(b,a%b):a;
 const percentOf=()=>{const p=pick([1,5,10,15,20,25,30,40,50,60,75,90]),step=100/gcd(p,100),amt=step*rand(1,Math.max(1,Math.floor(400/step))),v=p*amt/100;
   return{q:`${p}% of ${amt}`,a:v,opts:near(v,Math.max(1,Math.round(v/10)),0,400,12,[v*2,amt-v])}};
-const sq15=()=>{const k=rand(1,15);return{q:`${k}²`,a:k*k,opts:range(1,15).map(i=>i*i)}};
-const cubes=()=>{const k=pick([1,2,3,4,5,6,10]);return{q:`${k}³`,a:k**3,opts:[1,6,8,9,16,25,27,64,100,125,216,1000]}};
-const roots=()=>{const k=rand(1,15);return{q:`√${k*k}`,a:k,opts:range(1,15)}};
+const sq15=withItems(()=>{const k=rand(1,15);return{q:`${k}²`,a:k*k,opts:range(1,15).map(i=>i*i)}},range(1,15).map(k=>[`${k}²`,k*k]));
+const cubes=withItems(()=>{const k=pick([1,2,3,4,5,6,10]);return{q:`${k}³`,a:k**3,opts:[1,6,8,9,16,25,27,64,100,125,216,1000]}},[1,2,3,4,5,6,10].map(k=>[`${k}³`,k**3]));
+const roots=withItems(()=>{const k=rand(1,15);return{q:`√${k*k}`,a:k,opts:range(1,15)}},range(1,15).map(k=>[`√${k*k}`,k]));
 const eq1=()=>{const f=rand(0,2);let x,b,q;
   if(f===0){x=rand(1,20);b=rand(1,20);q=`x + ${b} = ${x+b}`}
   else if(f===1){b=rand(1,15);x=rand(b+1,b+20);q=`x − ${b} = ${x-b}`}
@@ -329,7 +379,7 @@ const PRIMES=range(2,100).filter(isPrime),NONPRIMES=range(4,100).filter(n=>!isPr
 const primeGen=()=>{const n=Math.random()<.5?pick(PRIMES):pick(NONPRIMES);return{q:String(n),a:isPrime(n)?'Prime':'Not prime',opts:['Prime','Not prime'],hint:'prime or not?'}};
 /* ---------- Secondary computing generators ---------- */
 const bin=(n,w)=>n.toString(2).padStart(w,'0');
-const bin4=()=>{const n=rand(0,15);return{q:bin(n,4),a:n,opts:range(0,15),hint:'binary → denary'}};
+const bin4=withItems(()=>{const n=rand(0,15);return{q:bin(n,4),a:n,opts:range(0,15),hint:'binary → denary'}},range(0,15).map(n=>[bin(n,4),n]));
 const bin8=()=>{const n=rand(16,255);return{q:bin(n,8),a:n,opts:near(n,1,0,255,12,[n+128>255?n-128:n+128,n^1,n^2,n+16,n-16]),hint:'binary → denary'}};
 const toBin=()=>{const n=rand(1,15);return{q:String(n),a:bin(n,4),opts:shuffle(near(n,1,0,15,6,[n^1,n^8,n^2])).map(v=>bin(v,4)),hint:'denary → 4-bit binary'}};
 const gates=()=>{const g=pick(['AND','OR','XOR','NOT']),A=rand(0,1),B=rand(0,1);
@@ -858,115 +908,247 @@ const scopeOf=p=>isCountry(p)?'all':level;
 const store={get(k,d){try{const v=localStorage.getItem('bdash:'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
   set(k,v){try{localStorage.setItem('bdash:'+k,JSON.stringify(v))}catch(e){}}};
 
-/* ---------- Sign-in & leaderboard ----------
+/* ---------- Accounts, sign-in & leaderboard ----------
    Inside claude.ai  → Claude account + shared artifact database.
-   On your website   → Supabase email sign-in (if configured above).
-   Otherwise         → scores stay on this device.                      */
+   Any website       → device accounts: username + PIN, username + password, email + password.
+   With Supabase set → online accounts too: email + password, Google, Microsoft.            */
 const DEFAULT_AVATAR="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><rect width="36" height="36" fill="#8A97AD"/><circle cx="18" cy="14" r="6" fill="#fff"/><path d="M6 32c2-7 7-10 12-10s10 3 12 10" fill="#fff"/></svg>');
-let BACKEND='local',UID=null,canPost=true,ROWS=[],MYDOC=null,USER=null,DB=null,SB=null;
+let BACKEND='local',UID=null,canPost=true,ROWS=[],MYDOC=null,USER=null,DB=null,SB=null,ONLINE=false,SBUSER=null;
 const boardKey=(k,secs)=>`${k.replace(/\//g,'-')}-${secs}`;
 function topFor(k,n=5){return ROWS.filter(r=>r.key===k&&r.s>0).sort((a,b)=>b.s-a.s).slice(0,n)}
-function myBest(k){if(BACKEND==='local'&&UID){const m=ROWS.find(r=>r.key===k&&r.id===UID);return m?m.s:0}const local=store.get('best:'+k,0);const mine=UID&&ROWS.find(r=>r.key===k&&r.id===UID);return Math.max(local,mine?mine.s:0)}
+function myBest(k){
+  if(UID&&BACKEND!=='claude'){const m=ROWS.find(r=>r.key===k&&r.id===UID);return m?m.s:0}
+  const local=store.get('best:'+k,0);const mine=UID&&ROWS.find(r=>r.key===k&&r.id===UID);return Math.max(local,mine?mine.s:0);
+}
 async function names(ids){
   if(!ids.length)return{};
   if(BACKEND==='claude'&&USER){try{return await USER.profiles(ids)}catch(e){return{}}}
   if(BACKEND==='local'){const m={};players().forEach(pl=>{if(ids.includes(pl.id))m[pl.id]={name:pl.name,avatarUrl:avatarFor(pl.name)}});return m}
-  const m={};ROWS.forEach(r=>{if(ids.includes(r.id)&&r.name)m[r.id]={name:r.name,avatarUrl:DEFAULT_AVATAR}});return m;
+  const m={};ROWS.forEach(r=>{if(ids.includes(r.id)&&r.name)m[r.id]={name:r.name,avatarUrl:avatarFor(r.name)}});return m;
 }
 function setWho(name,note){$('whoName').textContent=name;$('whoNote').textContent=note}
 const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e};
 
-/* ----- Players on this device (no setup needed) ----- */
+/* ----- helpers ----- */
 const PCOLORS=['#2D67E6','#C73B7A','#0E9A6E','#B9770A','#7552DC','#D04A1F','#0D7A92','#00843D'];
 const hashStr=str=>{let h=5381;for(let i=0;i<str.length;i++)h=((h*33)^str.charCodeAt(i))>>>0;return h.toString(36)};
-function avatarFor(name){const col=PCOLORS[parseInt(hashStr(name),36)%PCOLORS.length];
-  const ch=((name.trim()[0]||'?').toUpperCase()).replace(/[<>&"']/g,'?');
+function avatarFor(name){const col=PCOLORS[parseInt(hashStr(name||'?'),36)%PCOLORS.length];
+  const ch=(((name||'?').trim()[0]||'?').toUpperCase()).replace(/[<>&"']/g,'?');
   return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><rect width="36" height="36" rx="18" fill="'+col+'"/><text x="18" y="24" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">'+ch+'</text></svg>')}
-const players=()=>store.get('players',[]);
+const randHex=n=>{try{const a=new Uint8Array(n);crypto.getRandomValues(a);return [...a].map(b=>b.toString(16).padStart(2,'0')).join('')}catch(e){return Math.random().toString(16).slice(2)+Date.now().toString(16)}};
+async function hashSecret(salt,secret){
+  try{if(window.crypto&&crypto.subtle){const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(salt+':'+secret));return 's2:'+[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('')}}catch(e){}
+  return 'f1:'+hashStr(salt+':'+secret)+hashStr(secret+':'+salt);
+}
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function ageFrom(dob){const [y,m,d]=dob.split('-').map(Number);const t=new Date();let a=t.getFullYear()-y;if(t.getMonth()+1<m||(t.getMonth()+1===m&&t.getDate()<d))a--;return a}
+const levelForAge=a=>a>=11?'secondary':'primary';
+function applyAgeLevel(dob){
+  if(!dob)return;const lv=levelForAge(ageFrom(dob));
+  if(lv!==level){level=lv;store.set('level',lv);if(!packById(current))current='maths';if(!$('home').hidden)renderHome()}
+}
+const ageNote=dob=>dob?` · ${LEVELS[levelForAge(ageFrom(dob))].label}, age ${ageFrom(dob)}`:'';
+
+/* ----- device accounts ----- */
+const players=()=>store.get('players',[]).map(pl=>pl.login?pl:{...pl,login:'pin',ident:pl.name.toLowerCase()});
+function savePlayer(pl){const list=store.get('players',[]).filter(x=>x.id!==pl.id);store.set('players',[...list,pl])}
 function loadLocalRows(){const rows=[];players().forEach(pl=>{const b=store.get('pb:'+pl.id,{});for(const k in b)rows.push({id:pl.id,key:k,s:b[k],name:pl.name})});ROWS=rows}
 function setAuthButtons(mode){
-  // mode: 'out' (show Sign in + Create account), 'in' (show Sign out), 'claude' (show ✓ Signed in)
   const a=$('authBtn'),c=$('createBtn');
   if(mode==='out'){a.textContent='Sign in';c.hidden=false}
   else if(mode==='in'){a.textContent='Sign out';c.hidden=true}
   else{a.textContent='✓ Signed in';c.hidden=true}
 }
 function useLocalPlayer(id){
-  const pl=players().find(x=>x.id===id);UID=pl?pl.id:null;store.set('current',UID);
-  if(pl){setWho(pl.name,'Signed in on this device');$('avatar').src=avatarFor(pl.name);setAuthButtons('in')}
+  BACKEND='local';const pl=players().find(x=>x.id===id);UID=pl?pl.id:null;store.set('current',UID);
+  if(pl){setWho(pl.name,'Signed in on this device'+ageNote(pl.dob));$('avatar').src=avatarFor(pl.name);setAuthButtons('in');applyAgeLevel(pl.dob)}
   else{setWho('Guest player','Sign in or create an account to keep your own scores');$('avatar').src=DEFAULT_AVATAR;setAuthButtons('out')}
   loadLocalRows();renderStats();if(!$('home').hidden)renderTopics();
 }
-function initLocal(){BACKEND='local';useLocalPlayer(store.get('current',null))}
-function signInLocal(pl){useLocalPlayer(pl.id);$('localPanel').hidden=true}
+let FAILS=0,LOCKED_UNTIL=0;
+async function verifyPlayer(pl,secret){
+  if(pl.hash)return (await hashSecret(pl.salt,secret))===pl.hash;
+  if(pl.pin)return hashStr('bd:'+secret)===pl.pin;   // accounts from the earlier version
+  return true;
+}
+
+/* ----- account panel ----- */
+const METHODS=[
+  {id:'pin',label:'Username + PIN'},{id:'password',label:'Username + password'},{id:'email',label:'Email + password'},
+  {id:'google',label:'Google'},{id:'microsoft',label:'Microsoft'}];
+let PANEL={mode:'signin',method:'pin'};
 function panelField(id,label,attrs){
   const l=el('label');l.htmlFor=id;l.append(label);const i=el('input');i.id=id;i.autocomplete='off';
   Object.assign(i,attrs||{});l.append(i);return l;
 }
-function showPanel(){const P=$('localPanel');P.hidden=false;P.scrollIntoView?.({block:'nearest'});return P}
-
-/* Sign in: nickname + PIN */
-function renderSignIn(msg,prefill){
-  const P=$('localPanel');P.innerHTML='';P.dataset.mode='signin';
-  P.append(el('h3','panel-h','Sign in'));
-  const list=players();
-  if(list.length){
-    const wrap=el('div','players');
-    list.forEach(pl=>{const b=el('button','pl');b.type='button';
-      const img=el('img');img.alt='';img.src=avatarFor(pl.name);b.append(img,document.createTextNode(pl.name));
-      b.onclick=()=>{$('siName').value=pl.name;$('siPin').focus()};wrap.append(b)});
-    P.append(wrap);
+function dobField(){
+  const fs=el('fieldset','dob');fs.append(el('legend',null,'Date of birth'));
+  const mk=(id,label,opts)=>{const l=el('label');l.htmlFor=id;l.append(label);const s=el('select');s.id=id;s.required=true;
+    s.append(new Option(label==='Day'?'Day':label==='Month'?'Month':'Year',''));opts.forEach(([v,t])=>s.append(new Option(t,v)));l.append(s);return l};
+  const yNow=new Date().getFullYear();
+  fs.append(mk('dobD','Day',range(1,31).map(d=>[d,d])),mk('dobM','Month',MONTHS.map((m,i)=>[i+1,m])),mk('dobY','Year',range(yNow-100,yNow-3).reverse().map(y=>[y,y])));
+  return fs;
+}
+function readDob(){
+  const d=+$('dobD').value,m=+$('dobM').value,y=+$('dobY').value;
+  if(!d||!m||!y)return{err:'Please enter your full date of birth.'};
+  const dt=new Date(y,m-1,d);if(dt.getFullYear()!==y||dt.getMonth()!==m-1||dt.getDate()!==d)return{err:`${d} ${MONTHS[m-1]} ${y} is not a real date. Please check it.`};
+  const dob=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const a=ageFrom(dob);
+  if(a<4)return{err:'You need to be at least 4 to make an account.'};
+  return{dob};
+}
+function openPanel(mode,method){PANEL={mode,method:method||PANEL.method||'pin'};renderPanel()}
+function closePanel(){$('acctPanel').hidden=true}
+function renderPanel(msg,keep){
+  const P=$('acctPanel');P.innerHTML='';P.dataset.mode=PANEL.mode;P.hidden=false;
+  const create=PANEL.mode==='create',m=PANEL.method;
+  P.append(el('h3','panel-h',create?'Create account':'Sign in'));
+  const tabs=el('div','mtabs');tabs.setAttribute('role','tablist');
+  METHODS.forEach(x=>{const b=el('button','mtab',x.label);b.type='button';b.setAttribute('role','tab');b.setAttribute('aria-selected',x.id===m);
+    b.onclick=()=>{PANEL.method=x.id;renderPanel()};tabs.append(b)});
+  P.append(tabs);
+  const f=el('form','newp');f.noValidate=true;
+  if(m==='google'||m==='microsoft'){
+    const name=m==='google'?'Google':'Microsoft';
+    const b=el('button','oauth',`Continue with ${name}`);b.type='button';b.onclick=()=>oauth(m);f.append(b);
+    P.append(f);
+    P.append(el('p','authmsg',create
+      ?`You'll choose your ${name} account, then we'll ask for your date of birth. Under 13? Ask a parent or carer to help: ${name} accounts for children are set up by a parent.`
+      :`Use the ${name} account you signed up with.`));
+  }else{
+    const user=m==='email'?panelField('fId','Email',{type:'email',autocomplete:'email',placeholder:'you@example.com',required:true})
+                         :panelField('fId','Username',{maxLength:20,autocomplete:'username',placeholder:'e.g. sam_j',required:true});
+    const secLabel=m==='pin'?(create?'Choose a 4-digit PIN':'PIN'):(create?'Choose a password (8+ characters)':'Password');
+    const secAttrs=m==='pin'?{type:'password',maxLength:4,inputMode:'numeric',placeholder:'••••',required:true}:{type:'password',minLength:8,placeholder:'••••••••',required:true,autocomplete:create?'new-password':'current-password'};
+    if(create&&m==='email')f.append(panelField('fName','Display name',{maxLength:24,placeholder:'e.g. Sam J',required:true}));
+    f.append(user,panelField('fSec',secLabel,secAttrs));
+    if(create)f.append(panelField('fSec2',m==='pin'?'Type the PIN again':'Type the password again',secAttrs),dobField());
+    const go=el('button','play',create?'Create account':'Sign in');go.type='submit';f.append(go);
+    f.onsubmit=e=>{e.preventDefault();(create?doCreate:doSignIn)(m)};
+    P.append(f);
+    const where=m==='email'&&ONLINE?'Email accounts work on any device.':'This account is saved in this browser on this device.';
+    P.append(el('p','authmsg',create?`Use a nickname, not your full name. ${where}`:where));
+    if(!create&&m==='email'&&ONLINE){const fp=el('button','linkbtn','Forgot your password?');fp.type='button';fp.onclick=forgotPassword;P.append(fp)}
   }
-  const f=el('form','newp');
-  const nameF=panelField('siName','Nickname',{maxLength:24,required:true,placeholder:'e.g. Sam J',value:prefill||''});
-  const pinF=panelField('siPin','4-digit PIN',{maxLength:4,inputMode:'numeric',type:'password',placeholder:'••••'});
-  const go=el('button','play','Sign in');go.type='submit';
-  f.append(nameF,pinF,go);
-  f.onsubmit=e=>{e.preventDefault();
-    const name=$('siName').value.trim(),pin=$('siPin').value.trim();
-    const pl=players().find(x=>x.name.toLowerCase()===name.toLowerCase());
-    if(!pl){renderSignIn('There is no account called "'+name+'" on this device. Check the spelling, or tap Create account.',name);return}
-    if(pl.pin&&hashStr('bd:'+pin)!==pl.pin){renderSignIn('That PIN is not right. Try again.',pl.name);$('siPin').focus();return}
-    signInLocal(pl)};
-  P.append(f);
-  const row=el('p','authmsg');row.append(msg?msg+' ':'Tap your name or type it, then enter your PIN. ');
-  if(!msg||msg.indexOf('Create account')>-1){const sw=el('button','linkbtn','No account yet? Create one');sw.type='button';sw.onclick=()=>renderCreate();row.append(sw)}
-  P.append(row);
-  showPanel();(prefill?$('siPin'):$('siName')).focus();
+  if(msg)P.append(el('p','authmsg err',msg));
+  const sw=el('button','linkbtn',create?'Already have an account? Sign in':'No account yet? Create one');sw.type='button';
+  sw.onclick=()=>openPanel(create?'signin':'create',PANEL.method);P.append(sw);
+  if(keep)for(const k in keep){const i=$(k);if(i)i.value=keep[k]}
+  const first=P.querySelector('form input, form select, .oauth');if(first&&!msg)first.focus();
+}
+const val=id=>($(id)?.value||'').trim();
+function fail(msg){const P=$('acctPanel');let e=P.querySelector('.authmsg.live');
+  if(!e){e=el('p','authmsg err live');e.setAttribute('role','alert');const sw=P.querySelector(':scope > .linkbtn:last-child');P.insertBefore(e,sw||null)}
+  e.textContent=msg;}
+const keepVals=()=>{const k={};['fId','fName','dobD','dobM','dobY'].forEach(id=>{if($(id))k[id]=$(id).value});return k};
+
+async function doCreate(m){
+  const keep=keepVals();
+  let ident=val('fId').toLowerCase(),name=m==='email'?val('fName'):val('fId');const sec=$('fSec').value,sec2=$('fSec2').value;
+  if(m==='email'){if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ident))return fail('Please enter a real email address.');if(!name)return fail('Please choose a display name.')}
+  else if(!/^[a-z0-9_.]{3,20}$/.test(ident))return fail('Usernames need 3 to 20 letters, numbers, dots or underscores, with no spaces.');
+  if(m==='pin'&&!/^[0-9]{4}$/.test(sec))return fail('Your PIN must be exactly 4 numbers.');
+  if(m!=='pin'&&sec.length<8)return fail('Your password needs at least 8 characters.');
+  if(sec!==sec2)return fail(m==='pin'?'The two PINs do not match.':'The two passwords do not match.');
+  const d=readDob();if(d.err)return fail(d.err);
+  name=name.slice(0,24);
+  if(m==='email'&&ONLINE){
+    const {data,error}=await SB.auth.signUp({email:ident,password:sec,options:{emailRedirectTo:location.origin+location.pathname,data:{display_name:name,dob:d.dob}}});
+    if(error)return fail(`That didn't work: ${error.message}`);
+    if(!data.session){renderPanel();$('acctPanel').append(el('p','authmsg ok',`Nearly done! We sent a link to ${ident}. Open it to confirm your email, then sign in.`));return}
+    closePanel();return;
+  }
+  if(players().some(x=>x.ident===ident))return fail(m==='email'?'There is already an account with that email on this device. Try signing in.':`The username "${ident}" is taken on this device. Pick another one.`);
+  const salt=randHex(16);
+  const pl={id:'p'+Date.now().toString(36)+randHex(3),name:m==='email'?name:val('fId').slice(0,20),login:m,ident,salt,hash:await hashSecret(salt,sec),dob:d.dob,created:Date.now()};
+  savePlayer(pl);closePanel();useLocalPlayer(pl.id);
+}
+async function doSignIn(m){
+  const keep=keepVals();const ident=val('fId').toLowerCase(),sec=$('fSec').value;
+  const legacyOpen=players().find(x=>x.ident===ident&&!x.hash&&!x.pin);
+  if(!ident||(!sec&&!legacyOpen))return fail(m==='email'?'Enter your email and password.':`Enter your username and ${m==='pin'?'PIN':'password'}.`);
+  if(Date.now()<LOCKED_UNTIL)return fail(`Too many wrong tries. Wait ${Math.ceil((LOCKED_UNTIL-Date.now())/1000)} seconds and try again.`);
+  const pl=players().find(x=>x.ident===ident);
+  if(m==='email'&&ONLINE&&!pl){
+    const {error}=await SB.auth.signInWithPassword({email:ident,password:sec});
+    if(error)return fail(/confirm/i.test(error.message)?'Please confirm your email first: open the link we sent you.':'That email or password is not right.');
+    closePanel();return;
+  }
+  if(!pl)return fail(m==='email'?'There is no account with that email on this device.':`There is no account called "${ident}" on this device. Check the spelling, or create an account.`);
+  if(pl.login!==m){const tab=METHODS.find(x=>x.id===pl.login);return fail(`This account signs in with ${tab?tab.label:'a different method'}. Choose that tab above.`)}
+  if(!(await verifyPlayer(pl,sec))){FAILS++;if(FAILS>=5){LOCKED_UNTIL=Date.now()+30000;FAILS=0}
+    return fail(m==='pin'?'That PIN is not right.':'That password is not right.')}
+  FAILS=0;closePanel();
+  if(!pl.dob)return askDob({kind:'device',pl});
+  useLocalPlayer(pl.id);
+}
+function askDob(who){
+  const P=$('acctPanel');P.innerHTML='';P.dataset.mode='dob';P.hidden=false;
+  P.append(el('h3','panel-h','Add your date of birth'));
+  P.append(el('p','authmsg','We use it to show the right school level: primary or secondary. It stays private and never appears on the leaderboard.'));
+  const f=el('form','newp');f.noValidate=true;f.append(dobField());
+  const go=el('button','play','Save');go.type='submit';const no=el('button','ghost','Cancel and sign out');no.type='button';
+  f.append(go,no);P.append(f);
+  const err=el('p','authmsg err');err.hidden=true;P.append(err);
+  no.onclick=()=>{closePanel();signOut()};
+  f.onsubmit=async e=>{e.preventDefault();const d=readDob();if(d.err){err.textContent=d.err;err.hidden=false;return}
+    if(who.kind==='device'){who.pl.dob=d.dob;savePlayer(who.pl);closePanel();useLocalPlayer(who.pl.id)}
+    else if(who.kind==='online'){const {error}=await SB.auth.updateUser({data:{dob:d.dob}});if(error){err.textContent=error.message;err.hidden=false;return}closePanel();setSbUser((await SB.auth.getUser()).data.user)}
+    else{store.set('cdob:'+UID,d.dob);closePanel();applyAgeLevel(d.dob);setWho($('whoName').textContent,'Signed in with Claude'+ageNote(d.dob))}};
+  $('dobD').focus();
+}
+async function forgotPassword(){
+  const email=val('fId').toLowerCase();if(!email)return fail('Type your email address first, then tap "Forgot your password?".');
+  const {error}=await SB.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+  fail(error?`That didn't work: ${error.message}`:`If there's an account for ${email}, we've emailed a link to reset the password.`);
+}
+async function oauth(m){
+  if(!ONLINE)return fail(`${m==='google'?'Google':'Microsoft'} sign-in isn't switched on for this site yet. Ask whoever runs this site to set it up, or use a username or email account.`);
+  const {error}=await SB.auth.signInWithOAuth({provider:m==='google'?'google':'azure',options:{redirectTo:location.origin+location.pathname,scopes:m==='microsoft'?'email':undefined}});
+  if(error)fail(`That didn't work: ${error.message}`);
+}
+async function signOut(){
+  closePanel();
+  if(BACKEND==='supabase'&&SB){await SB.auth.signOut();SBUSER=null}
+  useLocalPlayer(null);
 }
 
-/* Create account: nickname + PIN (twice) */
-function renderCreate(msg){
-  const P=$('localPanel');P.innerHTML='';P.dataset.mode='create';
-  P.append(el('h3','panel-h','Create account'));
-  const f=el('form','newp');
-  const nameF=panelField('caName','Nickname',{maxLength:24,required:true,placeholder:'e.g. Sam J'});
-  const pinF=panelField('caPin','Choose a 4-digit PIN',{maxLength:4,inputMode:'numeric',type:'password',required:true,placeholder:'••••'});
-  const pin2F=panelField('caPin2','Type the PIN again',{maxLength:4,inputMode:'numeric',type:'password',required:true,placeholder:'••••'});
-  const go=el('button','play','Create account');go.type='submit';
-  f.append(nameF,pinF,pin2F,go);
-  f.onsubmit=e=>{e.preventDefault();
-    const name=$('caName').value.trim().slice(0,24),pin=$('caPin').value.trim(),pin2=$('caPin2').value.trim();
-    if(!name)return;
-    if(!/^[0-9]{4}$/.test(pin)){renderCreate('Your PIN must be exactly 4 numbers.');$('caName').value=name;return}
-    if(pin!==pin2){renderCreate('The two PINs do not match. Try again.');$('caName').value=name;return}
-    if(players().some(x=>x.name.toLowerCase()===name.toLowerCase())){renderCreate('The nickname "'+name+'" is taken on this device. Pick another one, or tap Sign in.');return}
-    const pl={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,pin:hashStr('bd:'+pin)};
-    store.set('players',[...players(),pl]);signInLocal(pl)};
-  P.append(f);
-  const row=el('p','authmsg');row.append(msg?msg+' ':'Use a nickname, not your full name. Your account and scores are saved in this browser on this device. ');
-  const sw=el('button','linkbtn','Already have an account? Sign in');sw.type='button';sw.onclick=()=>renderSignIn();row.append(sw);
-  P.append(row);
-  showPanel();$('caName').focus();
+/* ----- online accounts (Supabase) ----- */
+function loadScript(src){if(window.supabase)return Promise.resolve();return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;setTimeout(no,10000);document.head.appendChild(s)})}
+const onlineName=u=>{const md=u.user_metadata||{};return (md.display_name||(md.full_name||md.name||'').split(' ')[0]||(u.email||'Player').split('@')[0]).slice(0,24)};
+async function initSupabase(){
+  try{await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js')}catch(e){return false}
+  SB=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);ONLINE=true;
+  const {data}=await SB.auth.getSession();
+  if(data.session?.user)setSbUser(data.session.user);else useLocalPlayer(store.get('current',null));
+  SB.auth.onAuthStateChange((evt,s)=>{if(s?.user&&s.user.id!==SBUSER?.id)setSbUser(s.user)});
+  const q=new URLSearchParams(location.hash.slice(1)+'&'+location.search.slice(1));
+  if(q.get('error_description'))openPanel('signin'),renderPanel(`Sign-in didn't finish: ${q.get('error_description')}`);
+  return true;
+}
+function setSbUser(u){
+  if(!u){useLocalPlayer(null);return}
+  SBUSER=u;BACKEND='supabase';UID=u.id;store.set('current',null);
+  const name=onlineName(u),dob=u.user_metadata?.dob;
+  setWho(name,'Signed in online'+ageNote(dob));$('avatar').src=avatarFor(name);setAuthButtons('in');
+  renderStats();loadRows();
+  if(!dob)askDob({kind:'online'});else applyAgeLevel(dob);
+}
+async function loadRows(){
+  if(!SB)return;
+  const {data,error}=await SB.from('scores').select('user_id,name,board_key,score').order('score',{ascending:false}).limit(2000);
+  if(!error&&data&&BACKEND==='supabase'){ROWS=data.map(r=>({id:r.user_id,key:r.board_key,s:r.score,name:r.name}));renderTopicMeta()}
 }
 
+/* ----- Claude (inside claude.ai) ----- */
 async function initClaude(){
   try{USER=await window.claude.use('user')}catch(e){}
   if(USER){const me=await USER.me();UID=me.id;$('avatar').src=me.avatarUrl||DEFAULT_AVATAR;
-    if(UID){BACKEND='claude';setWho(me.name||'Signed in','Signed in with Claude · on the leaderboard');setAuthButtons('claude')}
+    if(UID){BACKEND='claude';const dob=store.get('cdob:'+UID,null);setWho(me.name||'Signed in','Signed in with Claude'+ageNote(dob));setAuthButtons('claude');
+      if(dob)applyAgeLevel(dob);else askDob({kind:'claude'})}
     if(await USER.can('data.write')===false)canPost=false;}
   try{DB=await window.claude.use('db')}catch(e){}
-  if(DB){BACKEND='claude';
+  if(DB&&UID){BACKEND='claude';
     DB.collection('scores').onSnapshot(snap=>{
       const rows=[];MYDOC=null;
       snap.docs.forEach(d=>{const data=d.data()||{};if(d.id===UID)MYDOC=data;const b=data.best||{};for(const k in b)rows.push({id:d.id,key:k,s:b[k]})});
@@ -974,26 +1156,9 @@ async function initClaude(){
     },()=>{});
   }
 }
-function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
-async function initSupabase(){
-  try{await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js')}
-  catch(e){return}
-  SB=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);BACKEND='supabase';
-  $('authBtn').hidden=false;
-  const {data}=await SB.auth.getSession();setSbUser(data.session?.user);
-  SB.auth.onAuthStateChange((_e,s)=>setSbUser(s?.user));
-  loadRows();
-}
-function setSbUser(u){
-  UID=u?.id||null;
-  if(u){setWho(u.user_metadata?.display_name||'Player','Signed in · on the leaderboard');setAuthButtons('in');$('authForm').hidden=true}
-  else{setWho('Guest player','Sign in to join the online leaderboard');setAuthButtons('out')}
-  renderStats();renderTopicMeta();
-}
-async function loadRows(){
-  const {data,error}=await SB.from('scores').select('user_id,name,board_key,score').order('score',{ascending:false}).limit(2000);
-  if(!error&&data){ROWS=data.map(r=>({id:r.user_id,key:r.board_key,s:r.score,name:r.name}));renderTopicMeta()}
-}
+
+/* ----- scores ----- */
+function bumpStats(score){const st=store.get('ps:'+UID,{games:0,correct:0});store.set('ps:'+UID,{games:st.games+1,correct:st.correct+score})}
 async function postScore(key,score){
   if(!UID)return 'local';
   if(BACKEND==='claude'){
@@ -1004,52 +1169,37 @@ async function postScore(key,score){
     catch(e){if(e&&e.code==='invalid_argument')canPost=false;return 'fail'}
   }
   if(BACKEND==='supabase'){
+    bumpStats(score);
     const mine=ROWS.find(r=>r.key===key&&r.id===UID);if(mine&&mine.s>=score)return 'ok';
-    const {data}=await SB.auth.getUser();const name=(data.user?.user_metadata?.display_name||'Player').slice(0,24);
-    const {error}=await SB.from('scores').upsert({user_id:UID,board_key:key,name,score,updated_at:new Date().toISOString()},{onConflict:'user_id,board_key'});
+    const {error}=await SB.from('scores').upsert({user_id:UID,board_key:key,name:onlineName(SBUSER),score,updated_at:new Date().toISOString()},{onConflict:'user_id,board_key'});
     if(error)return 'fail';await loadRows();return 'ok';
   }
-  if(BACKEND==='local'){
-    const pb=store.get('pb:'+UID,{});if(score>(pb[key]||0)){pb[key]=score;store.set('pb:'+UID,pb)}
-    const st=store.get('ps:'+UID,{games:0,correct:0});store.set('ps:'+UID,{games:st.games+1,correct:st.correct+score});
-    loadLocalRows();return 'ok';
-  }
-  return 'local';
+  const pb=store.get('pb:'+UID,{});if(score>(pb[key]||0)){pb[key]=score;store.set('pb:'+UID,pb)}
+  bumpStats(score);loadLocalRows();return 'ok';
 }
 function initAuthUi(){
-  $('authBtn').onclick=async()=>{
-    if(BACKEND==='claude'){const P=$('localPanel');if(!P.hidden){P.hidden=true;return}P.innerHTML='';
-      P.append(el('h3','panel-h','You are signed in'),el('p','authmsg','You are signed in with your claude.ai account, so your scores already go on the leaderboard. Anyone you share this page with signs in the same way.'));P.hidden=false;return}
-    if(BACKEND==='local'){const P=$('localPanel');
-      if(UID){useLocalPlayer(null);P.hidden=true;return}
-      if(!P.hidden&&P.dataset.mode==='signin'){P.hidden=true;return}
-      renderSignIn();return}
-    if(BACKEND!=='supabase')return;
-    if(UID){await SB.auth.signOut();return}
-    const f=$('authForm');f.hidden=!f.hidden;if(!f.hidden)$('authName').focus()};
-  $('createBtn').onclick=()=>{
-    if(BACKEND==='local'){const P=$('localPanel');if(!P.hidden&&P.dataset.mode==='create'){P.hidden=true;return}renderCreate();return}
-    if(BACKEND==='supabase'&&!UID){$('authForm').hidden=false;$('authName').focus()}};
-  $('authForm').addEventListener('submit',async e=>{e.preventDefault();if(!SB)return;
-    const name=$('authName').value.trim().slice(0,24),email=$('authEmail').value.trim(),msg=$('authMsg'),btn=$('authSend');
-    if(!name||!email)return;btn.disabled=true;msg.textContent='Sending…';
-    const {error}=await SB.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname,data:{display_name:name}}});
-    btn.disabled=false;
-    msg.textContent=error?`That didn't work: ${error.message}. Check the email address and try again.`:`Link sent to ${email}. Open it on this device to sign in.`});
+  $('authBtn').onclick=()=>{
+    if(BACKEND==='claude'){const P=$('acctPanel');if(!P.hidden){P.hidden=true;return}P.innerHTML='';
+      P.append(el('h3','panel-h','You are signed in'),el('p','authmsg','You are signed in with your claude.ai account, so your scores already go on the leaderboard.'));P.hidden=false;return}
+    if(UID)return signOut();
+    const P=$('acctPanel');if(!P.hidden&&P.dataset.mode==='signin'){P.hidden=true;return}openPanel('signin');
+  };
+  $('createBtn').onclick=()=>{const P=$('acctPanel');if(!P.hidden&&P.dataset.mode==='create'){P.hidden=true;return}openPanel('create')};
 }
 async function initCloud(){
   initAuthUi();
-  if(window.claude?.use){await initClaude();if(BACKEND!=='claude')initLocal();return}
-  if(SUPABASE_URL&&SUPABASE_ANON_KEY){await initSupabase();if(BACKEND==='supabase')return}
-  initLocal();
+  if(window.claude?.use){await initClaude();if(BACKEND==='claude')return}
+  if(SUPABASE_URL&&SUPABASE_ANON_KEY&&await initSupabase())return;
+  useLocalPlayer(store.get('current',null));
 }
 function renderStats(){
   let g,c,b;
   if(BACKEND==='claude'&&UID){g=MYDOC?.games||0;c=MYDOC?.correct||0;b=Object.keys(MYDOC?.best||{}).length}
-  else if(BACKEND==='local'&&UID){const st=store.get('ps:'+UID,{games:0,correct:0});g=st.games;c=st.correct;b=Object.keys(store.get('pb:'+UID,{})).length}
+  else if(UID){const st=store.get('ps:'+UID,{games:0,correct:0});g=st.games;c=st.correct;b=ROWS.filter(r=>r.id===UID).length}
   else{g=store.get('games',0);c=store.get('correct',0);b=store.get('bests',0)}
   $('mystats').hidden=!g;$('stGames').textContent=g;$('stCorrect').textContent=c;$('stBests').textContent=b;
 }
+
 /* ---------- Home ---------- */
 const $=id=>document.getElementById(id);
 const root=document.documentElement;
@@ -1078,7 +1228,7 @@ function renderCountries(){
     b.innerHTML=`<b></b><i></i><small></small>`;
     b.querySelector('b').textContent=c.name;b.querySelector('i').textContent=c.native!==c.name?c.native:'Home of the Three Lions';
     b.querySelector('small').textContent=`${c.topics.length} topics`;
-    b.onclick=()=>{select(c.id);$('packName').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})};
+    b.onclick=()=>{select(c.id);$('packName').scrollIntoView?.({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})};
     box.appendChild(b)});
 }
 function renderTabs(){
@@ -1101,10 +1251,13 @@ function renderTopics(){
         const k=boardKey(`${sc}/${p.id}/${t.id}/${v.key}`,roundSecs);const vb=myBest(k);if(vb&&roundSecs)c.title=`Your best: ${vb}`;
         c.onclick=()=>start(p,`${t.name}: ${v.label}`,v.gen,`${sc}/${p.id}/${t.id}/${v.key}`);chips.appendChild(c)});
       card.appendChild(chips);
+      const lb=el('button','learn','📖 Learn');lb.type='button';lb.onclick=()=>openLesson(p,t,0);card.appendChild(lb);
     }else{
       const meta=document.createElement('div');meta.className='meta';meta.dataset.key=boardKey(`${sc}/${p.id}/${t.id}`,roundSecs);card.appendChild(meta);
       const b=document.createElement('button');b.type='button';b.className='play';b.textContent='Play';
-      b.onclick=()=>start(p,t.name,t.gen,`${sc}/${p.id}/${t.id}`);card.appendChild(b);
+      b.onclick=()=>start(p,t.name,t.gen,`${sc}/${p.id}/${t.id}`);
+      const lb=el('button','learn','📖 Learn');lb.type='button';lb.onclick=()=>openLesson(p,t,0);
+      const row=el('div','cardbtns');row.append(b,lb);card.appendChild(row);
     }
     box.appendChild(card);
   });
@@ -1119,6 +1272,66 @@ async function renderTopicMeta(){
 }
 function renderHome(){setColor(current);renderLevels();renderCountries();renderTabs();renderTopics()}
 
+
+/* ---------- Lessons ---------- */
+const TIPS={
+  times:{say:['Multiplying is adding equal groups: 4 × 3 means four groups of three, which is 12.','Learn one table at a time and look for patterns. The 5 times table always ends in 5 or 0. In the 9 times table the digits add up to 9 (18, 27, 36). Double the 2s to get the 4s, and double the 4s to get the 8s.','Turnarounds work: 7 × 8 is the same as 8 × 7, so every fact you learn gives you two.'],ex:['6 × 7 = 42','8 × 9 = 72','12 × 4 = 48']},
+  div:{say:['Dividing undoes multiplying. If 6 × 7 = 42, then 42 ÷ 7 = 6 and 42 ÷ 6 = 7.','Ask yourself: how many 7s make 42? Count up in sevens if you need to.'],ex:['56 ÷ 8 = 7','45 ÷ 9 = 5','36 ÷ 4 = 9']},
+  bonds:{say:['Number bonds are pairs that make a total. The bonds to 10 are 1 + 9, 2 + 8, 3 + 7, 4 + 6 and 5 + 5.','Use them for bigger numbers: 3 + 7 = 10, so 13 + 7 = 20 and 30 + 70 = 100.','For 100, the tens make 90 and the ones make 10: 35 + 65 = 100.'],ex:['6 + 4 = 10','12 + 8 = 20','45 + 55 = 100']},
+  addsub:{say:['Partition the second number into tens and ones: 47 + 15 = 47 + 10 + 5 = 62.','To take away, count back the tens, then the ones: 63 − 18 = 63 − 10 − 8 = 45.','Check an answer with the inverse: 45 + 18 should give 63.'],ex:['36 + 27 = 63','82 − 15 = 67']},
+  dh:{say:['Double means × 2. Half means ÷ 2.','Split tens and ones: double 37 = double 30 + double 7 = 60 + 14 = 74.','Half of 58 = half of 50 + half of 8 = 25 + 4 = 29.'],ex:['Double 24 = 48','Half of 76 = 38']},
+  frac:{say:['The bottom number of a fraction says how many equal parts to split into.','To find 1/4 of 20, divide by 4: 20 ÷ 4 = 5.'],ex:['1/2 of 18 = 9','1/3 of 21 = 7','1/5 of 35 = 7']},
+  sq:{say:['A square number is a number multiplied by itself. The small ² means "squared".','6² = 6 × 6 = 36. The square numbers make square patterns of dots.'],ex:['4² = 16','9² = 81','12² = 144']},
+  rom:{say:['I = 1, V = 5, X = 10, L = 50, C = 100.','Add when a smaller numeral comes after a bigger one: VI = 6, XV = 15.','Subtract when a smaller numeral comes before: IV = 4, IX = 9, XL = 40, XC = 90.'],ex:['XXIV = 24','LXXVIII = 78','XCIX = 99']},
+  pv:{say:['Each digit is worth a different amount depending on its place.','In 4,827 the 4 is worth 4,000, the 8 is worth 800, the 2 is worth 20 and the 7 is worth 7.'],ex:['The 6 in 3,642 = 600','The 9 in 9,135 = 9,000']},
+  mix:{say:['These are all the times tables up to 12 × 12, mixed up, plus the division facts that go with them.','If you know 7 × 8 = 56, you also know 56 ÷ 8 = 7 and 56 ÷ 7 = 8.'],ex:['9 × 7 = 63','84 ÷ 12 = 7']},
+  neg:{say:['Use a number line: adding moves right, subtracting moves left.','Adding a negative is the same as subtracting: 5 + (−3) = 2.','Subtracting a negative is the same as adding: 5 − (−3) = 8.'],ex:['−4 + 9 = 5','−6 − 3 = −9','2 − (−7) = 9']},
+  bidmas:{say:['Work in this order: Brackets, Indices (powers), Division and Multiplication (left to right), then Addition and Subtraction (left to right).','3 + 4 × 2 = 3 + 8 = 11, not 14. With brackets, (3 + 4) × 2 = 14.'],ex:['10 − 6 ÷ 2 = 7','(5 + 3) × 4 = 32']},
+  pct:{say:['Per cent means "out of 100".','10% = divide by 10. 50% = divide by 2. 25% = divide by 4. 1% = divide by 100.','Build the rest: 30% = 3 × 10%. 75% = 50% + 25%. 15% = 10% + 5%.'],ex:['15% of 60 = 9','75% of 80 = 60']},
+  pow:{say:['Squared means times itself once: 7² = 7 × 7 = 49.','Cubed means times itself twice: 4³ = 4 × 4 × 4 = 64.','A square root undoes squaring: √49 = 7 because 7² = 49.'],ex:['13² = 169','5³ = 125','√144 = 12']},
+  alg:{say:['Whatever you do to one side of the equals sign, do to the other side.','x + 5 = 12: take 5 from both sides, so x = 7.','3x + 4 = 19: take 4 from both sides (3x = 15), then divide both sides by 3 (x = 5).','Check by putting your answer back in.'],ex:['x − 6 = 9 → x = 15','4x = 28 → x = 7','2x + 3 = 17 → x = 7']},
+  fdp:{say:['Fraction to decimal: divide the top by the bottom. 3/4 = 3 ÷ 4 = 0.75.','Decimal to percentage: multiply by 100. 0.75 = 75%.'],ex:['2/5 = 0.4 = 40%','1/8 = 0.125 = 12.5%']},
+  prime:{say:['A prime number has exactly two factors: 1 and itself.','1 is not prime. 2 is the only even prime.','To check a number up to 100, see if 2, 3, 5 or 7 divide into it. If none do, it is prime.'],ex:['Prime: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29','Not prime: 21 = 3 × 7, 91 = 7 × 13']},
+  binary:{say:['Binary uses only 0 and 1. Each place is worth double the one to its right.','4-bit place values: 8 4 2 1. 8-bit place values: 128 64 32 16 8 4 2 1.','Add up the place values that have a 1. 1011 = 8 + 2 + 1 = 11.'],ex:['0110 = 6','1111 = 15','10000000 = 128']},
+  logic:{say:['AND gives 1 only if both inputs are 1.','OR gives 1 if at least one input is 1.','XOR gives 1 if exactly one input is 1.','NOT flips the input: 0 becomes 1 and 1 becomes 0.'],ex:['1 AND 0 = 0','1 OR 0 = 1','1 XOR 1 = 0','NOT 0 = 1']},
+  devices:{say:['A simile compares using "like" or "as". A metaphor says something IS something else.','Personification gives human actions to things that are not human.','Alliteration repeats the first sound. Onomatopoeia is a word that sounds like its noise. Hyperbole is big exaggeration.']},
+  angles:{say:['Angles on a straight line add up to 180°. Angles around a point add up to 360°.','Angles in a triangle add up to 180°, and in a quadrilateral 360°.','For any polygon, the interior angles add up to (number of sides − 2) × 180°.']},
+};
+const factsOf=g=>(g&&g.items)||[];
+let L=null;
+function openLesson(p,t,vi){
+  clearAll();setColor(p.id);L={p,t,vi:vi||0};
+  $('home').hidden=true;$('game').hidden=true;$('lesson').hidden=false;
+  $('ltop').textContent=`${p.name} · Lesson`;
+  $('lkicker').textContent=isCountry(p)?`${p.name} · ${CURRIC[p.id][level]}`:`${p.name} · ${LEVELS[level].label}`;
+  $('lname').textContent=t.name;
+  const intro=$('lintro');intro.innerHTML='';const tip=TIPS[t.id];
+  intro.append(el('h3',null,'How it works'));
+  (tip?tip.say:[t.blurb,'Read through the key facts. Then tick "Hide answers" and tap each card to test yourself before you start the quiz.']).forEach(x=>intro.append(el('p',null,x)));
+  if(tip&&tip.ex){intro.append(el('h3',null,'Examples'));const ex=el('div','lex');tip.ex.forEach(x=>ex.append(el('span',null,x)));intro.append(ex)}
+  $('lhide').checked=false;$('lfacts').classList.remove('hideans');
+  renderLessonFacts();
+  window.scrollTo&&window.scrollTo(0,0);$('lesson').scrollTop=0;
+}
+function renderLessonFacts(){
+  const {t}=L;const vbox=$('lvariants');vbox.innerHTML='';
+  if(t.variants){vbox.hidden=false;
+    t.variants.forEach((v,i)=>{const c=el('button','chip',v.label);c.type='button';c.setAttribute('aria-pressed',i===L.vi);
+      c.onclick=()=>{L.vi=i;renderLessonFacts()};vbox.append(c)})}
+  else vbox.hidden=true;
+  const g=t.variants?t.variants[L.vi].gen:t.gen;const items=factsOf(g);
+  const grid=$('lfacts');grid.innerHTML='';
+  $('lfhead').hidden=!items.length;$('lnote').hidden=!!items.length;
+  items.forEach(([q,a])=>{const b=el('button','fact');b.type='button';b.append(el('span','fq',String(q)),el('span','fa',String(a)));
+    b.onclick=()=>b.classList.toggle('shown');grid.append(b)});
+  $('lstart').textContent=t.variants?`Start quiz: ${t.variants[L.vi].label}`:'Start quiz';
+}
+function startFromLesson(){
+  const {p,t}=L;const sc=scopeOf(p);
+  if(t.variants){const v=t.variants[L.vi];start(p,`${t.name}: ${v.label}`,v.gen,`${sc}/${p.id}/${t.id}/${v.key}`)}
+  else start(p,t.name,t.gen,`${sc}/${p.id}/${t.id}`);
+}
+
 /* ---------- Game ---------- */
 let G=null,timers=[];
 const later=(f,ms)=>{const id=setTimeout(f,ms);timers.push(id);return id};
@@ -1129,7 +1342,7 @@ function start(p,title,gen,baseKey){
   const secs=roundSecs;
   G={p,title,gen,baseKey,secs,key:boardKey(baseKey,secs),score:0,tries:0,running:false,lock:false,last:null};
   setColor(p.id);
-  $('home').hidden=true;$('game').hidden=false;$('end').hidden=true;
+  $('home').hidden=true;$('lesson').hidden=true;$('game').hidden=false;$('end').hidden=true;
   $('gtitle').textContent=`${p.name} · ${title}`;
   $('score').textContent='0';
   $('timer').hidden=!secs;$('done').hidden=!!secs;
@@ -1191,7 +1404,7 @@ async function finish(){
   if(isBest&&!prev)store.set('bests',store.get('bests',0)+1);}
   const res=await postScore(G.key,G.score);
   const note=$('endNote');
-  if(!UID){note.textContent=BACKEND==='supabase'?'Sign in at the top of the page to put your scores on the leaderboard.':BACKEND==='claude'?'Open this page while signed in to claude.ai to join the leaderboard.':'Tap Sign in / Create player at the top to keep your own scores and get on the leaderboard.';note.hidden=false}
+  if(!UID){note.textContent=BACKEND==='supabase'?'Sign in at the top of the page to put your scores on the leaderboard.':BACKEND==='claude'?'Open this page while signed in to claude.ai to join the leaderboard.':'Tap Sign in or Create account at the top to keep your own scores and get on the leaderboard.';note.hidden=false}
   else if(res!=='ok'){note.textContent=BACKEND==='claude'?'Your score is saved on this device. To post scores, ask the page owner for Contributor access.':'Could not reach the leaderboard. Your score is saved on this device.';note.hidden=false}
   renderStats();
   await renderBoard(G.key);
@@ -1207,10 +1420,12 @@ async function renderBoard(key){
     const b=document.createElement('b');b.textContent=r.s;li.append(n,img,nm,b);ol.appendChild(li)});
   $('board').hidden=false;
 }
-function home(){clearAll();if(G)G.running=false;$('game').hidden=true;$('home').hidden=false;renderHome()}
+function home(){clearAll();if(G)G.running=false;$('game').hidden=true;$('lesson').hidden=true;$('home').hidden=false;renderHome()}
+$('lessonBack').onclick=()=>home();$('lstart').onclick=()=>startFromLesson();
+$('lhide').onchange=()=>{$('lfacts').classList.toggle('hideans',$('lhide').checked);[...$('lfacts').children].forEach(c=>c.classList.remove('shown'))};
 $('quit').onclick=home;$('other').onclick=home;$('done').onclick=()=>{if(G&&G.running)finish()};
 $('again').onclick=()=>{const p=G.p;roundSecs=G.secs;start(p,G.title,G.gen,G.baseKey)};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('game').hidden)home()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(!$('game').hidden||!$('lesson').hidden))home()});
 
 $('avatar').src=DEFAULT_AVATAR;
 renderRound();renderHome();renderStats();initCloud();
