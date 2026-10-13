@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Button Dash UK: a 60-second tap-the-right-answer quiz game for primary and secondary pupils in England, Wales, Scotland and Northern Ireland.">
+<meta name="description" content="Button Dash UK: a tap-the-right-answer quiz game for primary and secondary pupils in England, Wales, Scotland and Northern Ireland.">
 <meta name="theme-color" content="#2D67E6">
 <title>Button Dash UK</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -156,6 +156,18 @@ h2.sec{font-family:var(--f-display);font-weight:800;font-size:.8rem;letter-spaci
 .authform input{font:inherit;font-size:1rem;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
 .authform input:focus-visible{outline:3px solid var(--sc);outline-offset:1px}
 .authmsg{flex-basis:100%;margin:0;font-size:.88rem;color:var(--muted)}
+.panel-h{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.25rem;flex-basis:100%}
+.players{display:flex;flex-wrap:wrap;gap:8px;flex-basis:100%}
+.pl{display:flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:99px;border:2px solid var(--line);background:var(--bg);font-weight:700}
+.pl img{width:30px;height:30px;border-radius:50%}
+.pl.plain{padding-left:14px}
+.pl[aria-pressed="true"]{border-color:var(--sc)}
+.newp{display:flex;flex-wrap:wrap;gap:10px;align-items:end;flex-basis:100%}
+.newp label{display:flex;flex-direction:column;font-size:.78rem;font-weight:700;color:var(--muted);gap:4px;flex:1 1 180px;min-width:0}
+.newp input{font:inherit;font-size:1rem;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+#authBtn{margin:0;align-self:center;font-size:1.05rem;padding:11px 22px}
+#createBtn{align-self:center;font-size:1.05rem;padding:10px 18px;border-color:var(--sc);font-family:var(--f-display);font-weight:800}
+.linkbtn{border:0;background:none;padding:0;color:var(--sc);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 @media (max-width:480px){ .keys{gap:8px} .stat b{font-size:1.3rem} .mystats{gap:10px} }
 @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
 </style>
@@ -168,7 +180,8 @@ h2.sec{font-family:var(--f-display);font-weight:800;font-size:.8rem;letter-spaci
     <div class="who" id="who"><img id="avatar" alt=""><div><b id="whoName">Guest player</b><small id="whoNote">Scores are saved on this device</small></div></div>
     <div class="acctright">
       <div class="mystats" id="mystats" hidden><span><b id="stGames">0</b>games</span><span><b id="stCorrect">0</b>correct</span><span><b id="stBests">0</b>bests</span></div>
-      <button class="ghost" id="authBtn" type="button" hidden>Sign in</button>
+      <button class="play" id="authBtn" type="button">Sign in</button>
+      <button class="ghost" id="createBtn" type="button">Create account</button>
     </div>
   </div>
   <form class="authform" id="authForm" hidden>
@@ -177,6 +190,7 @@ h2.sec{font-family:var(--f-display);font-weight:800;font-size:.8rem;letter-spaci
     <button class="play" type="submit" id="authSend">Email me a sign-in link</button>
     <p class="authmsg" id="authMsg">We'll email you a link. Tap it and you're signed in, no password needed. Use a first name or nickname, not your full name.</p>
   </form>
+  <div class="authform" id="localPanel" hidden></div>
   <header class="mast">
     <div>
       <h1 class="brand">Button<span> Dash</span> UK</h1>
@@ -852,18 +866,104 @@ const DEFAULT_AVATAR="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http:
 let BACKEND='local',UID=null,canPost=true,ROWS=[],MYDOC=null,USER=null,DB=null,SB=null;
 const boardKey=(k,secs)=>`${k.replace(/\//g,'-')}-${secs}`;
 function topFor(k,n=5){return ROWS.filter(r=>r.key===k&&r.s>0).sort((a,b)=>b.s-a.s).slice(0,n)}
-function myBest(k){const local=store.get('best:'+k,0);const mine=UID&&ROWS.find(r=>r.key===k&&r.id===UID);return Math.max(local,mine?mine.s:0)}
+function myBest(k){if(BACKEND==='local'&&UID){const m=ROWS.find(r=>r.key===k&&r.id===UID);return m?m.s:0}const local=store.get('best:'+k,0);const mine=UID&&ROWS.find(r=>r.key===k&&r.id===UID);return Math.max(local,mine?mine.s:0)}
 async function names(ids){
   if(!ids.length)return{};
   if(BACKEND==='claude'&&USER){try{return await USER.profiles(ids)}catch(e){return{}}}
+  if(BACKEND==='local'){const m={};players().forEach(pl=>{if(ids.includes(pl.id))m[pl.id]={name:pl.name,avatarUrl:avatarFor(pl.name)}});return m}
   const m={};ROWS.forEach(r=>{if(ids.includes(r.id)&&r.name)m[r.id]={name:r.name,avatarUrl:DEFAULT_AVATAR}});return m;
 }
 function setWho(name,note){$('whoName').textContent=name;$('whoNote').textContent=note}
+const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e};
+
+/* ----- Players on this device (no setup needed) ----- */
+const PCOLORS=['#2D67E6','#C73B7A','#0E9A6E','#B9770A','#7552DC','#D04A1F','#0D7A92','#00843D'];
+const hashStr=str=>{let h=5381;for(let i=0;i<str.length;i++)h=((h*33)^str.charCodeAt(i))>>>0;return h.toString(36)};
+function avatarFor(name){const col=PCOLORS[parseInt(hashStr(name),36)%PCOLORS.length];
+  const ch=((name.trim()[0]||'?').toUpperCase()).replace(/[<>&"']/g,'?');
+  return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><rect width="36" height="36" rx="18" fill="'+col+'"/><text x="18" y="24" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">'+ch+'</text></svg>')}
+const players=()=>store.get('players',[]);
+function loadLocalRows(){const rows=[];players().forEach(pl=>{const b=store.get('pb:'+pl.id,{});for(const k in b)rows.push({id:pl.id,key:k,s:b[k],name:pl.name})});ROWS=rows}
+function setAuthButtons(mode){
+  // mode: 'out' (show Sign in + Create account), 'in' (show Sign out), 'claude' (show ✓ Signed in)
+  const a=$('authBtn'),c=$('createBtn');
+  if(mode==='out'){a.textContent='Sign in';c.hidden=false}
+  else if(mode==='in'){a.textContent='Sign out';c.hidden=true}
+  else{a.textContent='✓ Signed in';c.hidden=true}
+}
+function useLocalPlayer(id){
+  const pl=players().find(x=>x.id===id);UID=pl?pl.id:null;store.set('current',UID);
+  if(pl){setWho(pl.name,'Signed in on this device');$('avatar').src=avatarFor(pl.name);setAuthButtons('in')}
+  else{setWho('Guest player','Sign in or create an account to keep your own scores');$('avatar').src=DEFAULT_AVATAR;setAuthButtons('out')}
+  loadLocalRows();renderStats();if(!$('home').hidden)renderTopics();
+}
+function initLocal(){BACKEND='local';useLocalPlayer(store.get('current',null))}
+function signInLocal(pl){useLocalPlayer(pl.id);$('localPanel').hidden=true}
+function panelField(id,label,attrs){
+  const l=el('label');l.htmlFor=id;l.append(label);const i=el('input');i.id=id;i.autocomplete='off';
+  Object.assign(i,attrs||{});l.append(i);return l;
+}
+function showPanel(){const P=$('localPanel');P.hidden=false;P.scrollIntoView?.({block:'nearest'});return P}
+
+/* Sign in: nickname + PIN */
+function renderSignIn(msg,prefill){
+  const P=$('localPanel');P.innerHTML='';P.dataset.mode='signin';
+  P.append(el('h3','panel-h','Sign in'));
+  const list=players();
+  if(list.length){
+    const wrap=el('div','players');
+    list.forEach(pl=>{const b=el('button','pl');b.type='button';
+      const img=el('img');img.alt='';img.src=avatarFor(pl.name);b.append(img,document.createTextNode(pl.name));
+      b.onclick=()=>{$('siName').value=pl.name;$('siPin').focus()};wrap.append(b)});
+    P.append(wrap);
+  }
+  const f=el('form','newp');
+  const nameF=panelField('siName','Nickname',{maxLength:24,required:true,placeholder:'e.g. Sam J',value:prefill||''});
+  const pinF=panelField('siPin','4-digit PIN',{maxLength:4,inputMode:'numeric',type:'password',placeholder:'••••'});
+  const go=el('button','play','Sign in');go.type='submit';
+  f.append(nameF,pinF,go);
+  f.onsubmit=e=>{e.preventDefault();
+    const name=$('siName').value.trim(),pin=$('siPin').value.trim();
+    const pl=players().find(x=>x.name.toLowerCase()===name.toLowerCase());
+    if(!pl){renderSignIn('There is no account called "'+name+'" on this device. Check the spelling, or tap Create account.',name);return}
+    if(pl.pin&&hashStr('bd:'+pin)!==pl.pin){renderSignIn('That PIN is not right. Try again.',pl.name);$('siPin').focus();return}
+    signInLocal(pl)};
+  P.append(f);
+  const row=el('p','authmsg');row.append(msg?msg+' ':'Tap your name or type it, then enter your PIN. ');
+  if(!msg||msg.indexOf('Create account')>-1){const sw=el('button','linkbtn','No account yet? Create one');sw.type='button';sw.onclick=()=>renderCreate();row.append(sw)}
+  P.append(row);
+  showPanel();(prefill?$('siPin'):$('siName')).focus();
+}
+
+/* Create account: nickname + PIN (twice) */
+function renderCreate(msg){
+  const P=$('localPanel');P.innerHTML='';P.dataset.mode='create';
+  P.append(el('h3','panel-h','Create account'));
+  const f=el('form','newp');
+  const nameF=panelField('caName','Nickname',{maxLength:24,required:true,placeholder:'e.g. Sam J'});
+  const pinF=panelField('caPin','Choose a 4-digit PIN',{maxLength:4,inputMode:'numeric',type:'password',required:true,placeholder:'••••'});
+  const pin2F=panelField('caPin2','Type the PIN again',{maxLength:4,inputMode:'numeric',type:'password',required:true,placeholder:'••••'});
+  const go=el('button','play','Create account');go.type='submit';
+  f.append(nameF,pinF,pin2F,go);
+  f.onsubmit=e=>{e.preventDefault();
+    const name=$('caName').value.trim().slice(0,24),pin=$('caPin').value.trim(),pin2=$('caPin2').value.trim();
+    if(!name)return;
+    if(!/^[0-9]{4}$/.test(pin)){renderCreate('Your PIN must be exactly 4 numbers.');$('caName').value=name;return}
+    if(pin!==pin2){renderCreate('The two PINs do not match. Try again.');$('caName').value=name;return}
+    if(players().some(x=>x.name.toLowerCase()===name.toLowerCase())){renderCreate('The nickname "'+name+'" is taken on this device. Pick another one, or tap Sign in.');return}
+    const pl={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,pin:hashStr('bd:'+pin)};
+    store.set('players',[...players(),pl]);signInLocal(pl)};
+  P.append(f);
+  const row=el('p','authmsg');row.append(msg?msg+' ':'Use a nickname, not your full name. Your account and scores are saved in this browser on this device. ');
+  const sw=el('button','linkbtn','Already have an account? Sign in');sw.type='button';sw.onclick=()=>renderSignIn();row.append(sw);
+  P.append(row);
+  showPanel();$('caName').focus();
+}
 
 async function initClaude(){
   try{USER=await window.claude.use('user')}catch(e){}
   if(USER){const me=await USER.me();UID=me.id;$('avatar').src=me.avatarUrl||DEFAULT_AVATAR;
-    if(UID){BACKEND='claude';setWho(me.name||'Signed in','Signed in with Claude · on the leaderboard')}
+    if(UID){BACKEND='claude';setWho(me.name||'Signed in','Signed in with Claude · on the leaderboard');setAuthButtons('claude')}
     if(await USER.can('data.write')===false)canPost=false;}
   try{DB=await window.claude.use('db')}catch(e){}
   if(DB){BACKEND='claude';
@@ -877,7 +977,7 @@ async function initClaude(){
 function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
 async function initSupabase(){
   try{await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js')}
-  catch(e){setWho('Guest player','Could not reach the leaderboard. Scores are saved on this device.');return}
+  catch(e){return}
   SB=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);BACKEND='supabase';
   $('authBtn').hidden=false;
   const {data}=await SB.auth.getSession();setSbUser(data.session?.user);
@@ -886,8 +986,8 @@ async function initSupabase(){
 }
 function setSbUser(u){
   UID=u?.id||null;
-  if(u){setWho(u.user_metadata?.display_name||'Player','Signed in · on the leaderboard');$('authBtn').textContent='Sign out';$('authForm').hidden=true}
-  else{setWho('Guest player','Sign in to join the leaderboard');$('authBtn').textContent='Sign in'}
+  if(u){setWho(u.user_metadata?.display_name||'Player','Signed in · on the leaderboard');setAuthButtons('in');$('authForm').hidden=true}
+  else{setWho('Guest player','Sign in to join the online leaderboard');setAuthButtons('out')}
   renderStats();renderTopicMeta();
 }
 async function loadRows(){
@@ -909,12 +1009,27 @@ async function postScore(key,score){
     const {error}=await SB.from('scores').upsert({user_id:UID,board_key:key,name,score,updated_at:new Date().toISOString()},{onConflict:'user_id,board_key'});
     if(error)return 'fail';await loadRows();return 'ok';
   }
+  if(BACKEND==='local'){
+    const pb=store.get('pb:'+UID,{});if(score>(pb[key]||0)){pb[key]=score;store.set('pb:'+UID,pb)}
+    const st=store.get('ps:'+UID,{games:0,correct:0});store.set('ps:'+UID,{games:st.games+1,correct:st.correct+score});
+    loadLocalRows();return 'ok';
+  }
   return 'local';
 }
 function initAuthUi(){
-  $('authBtn').onclick=async()=>{if(BACKEND!=='supabase')return;
+  $('authBtn').onclick=async()=>{
+    if(BACKEND==='claude'){const P=$('localPanel');if(!P.hidden){P.hidden=true;return}P.innerHTML='';
+      P.append(el('h3','panel-h','You are signed in'),el('p','authmsg','You are signed in with your claude.ai account, so your scores already go on the leaderboard. Anyone you share this page with signs in the same way.'));P.hidden=false;return}
+    if(BACKEND==='local'){const P=$('localPanel');
+      if(UID){useLocalPlayer(null);P.hidden=true;return}
+      if(!P.hidden&&P.dataset.mode==='signin'){P.hidden=true;return}
+      renderSignIn();return}
+    if(BACKEND!=='supabase')return;
     if(UID){await SB.auth.signOut();return}
     const f=$('authForm');f.hidden=!f.hidden;if(!f.hidden)$('authName').focus()};
+  $('createBtn').onclick=()=>{
+    if(BACKEND==='local'){const P=$('localPanel');if(!P.hidden&&P.dataset.mode==='create'){P.hidden=true;return}renderCreate();return}
+    if(BACKEND==='supabase'&&!UID){$('authForm').hidden=false;$('authName').focus()}};
   $('authForm').addEventListener('submit',async e=>{e.preventDefault();if(!SB)return;
     const name=$('authName').value.trim().slice(0,24),email=$('authEmail').value.trim(),msg=$('authMsg'),btn=$('authSend');
     if(!name||!email)return;btn.disabled=true;msg.textContent='Sending…';
@@ -924,13 +1039,14 @@ function initAuthUi(){
 }
 async function initCloud(){
   initAuthUi();
-  if(window.claude?.use){await initClaude();return}
-  if(SUPABASE_URL&&SUPABASE_ANON_KEY){await initSupabase();return}
-  setWho('Guest player','Scores are saved on this device');
+  if(window.claude?.use){await initClaude();if(BACKEND!=='claude')initLocal();return}
+  if(SUPABASE_URL&&SUPABASE_ANON_KEY){await initSupabase();if(BACKEND==='supabase')return}
+  initLocal();
 }
 function renderStats(){
   let g,c,b;
   if(BACKEND==='claude'&&UID){g=MYDOC?.games||0;c=MYDOC?.correct||0;b=Object.keys(MYDOC?.best||{}).length}
+  else if(BACKEND==='local'&&UID){const st=store.get('ps:'+UID,{games:0,correct:0});g=st.games;c=st.correct;b=Object.keys(store.get('pb:'+UID,{})).length}
   else{g=store.get('games',0);c=store.get('correct',0);b=store.get('bests',0)}
   $('mystats').hidden=!g;$('stGames').textContent=g;$('stCorrect').textContent=c;$('stBests').textContent=b;
 }
@@ -1071,11 +1187,11 @@ async function finish(){
   $('end').hidden=false;$('again').focus();
   if(practice)return;
   if(isBest)store.set('best:'+G.key,G.score);
-  store.set('games',store.get('games',0)+1);store.set('correct',store.get('correct',0)+G.score);
-  if(isBest&&!prev)store.set('bests',store.get('bests',0)+1);
+  if(!UID){store.set('games',store.get('games',0)+1);store.set('correct',store.get('correct',0)+G.score);
+  if(isBest&&!prev)store.set('bests',store.get('bests',0)+1);}
   const res=await postScore(G.key,G.score);
   const note=$('endNote');
-  if(!UID){note.textContent=BACKEND==='supabase'?'Sign in at the top of the page to put your scores on the leaderboard.':BACKEND==='claude'?'Open this page while signed in to claude.ai to join the leaderboard.':'Your score is saved on this device.';note.hidden=false}
+  if(!UID){note.textContent=BACKEND==='supabase'?'Sign in at the top of the page to put your scores on the leaderboard.':BACKEND==='claude'?'Open this page while signed in to claude.ai to join the leaderboard.':'Tap Sign in / Create player at the top to keep your own scores and get on the leaderboard.';note.hidden=false}
   else if(res!=='ok'){note.textContent=BACKEND==='claude'?'Your score is saved on this device. To post scores, ask the page owner for Contributor access.':'Could not reach the leaderboard. Your score is saved on this device.';note.hidden=false}
   renderStats();
   await renderBoard(G.key);
@@ -1083,7 +1199,7 @@ async function finish(){
 async function renderBoard(key){
   const rows=topFor(key,5);if(!rows.length)return;
   const ps=await names(rows.map(r=>r.id));const ol=$('boardList');ol.innerHTML='';
-  $('boardTitle').textContent=`Top players · ${G.secs}s rounds`;
+  $('boardTitle').textContent=BACKEND==='local'?`Top players on this device · ${G.secs}s rounds`:`Top players · ${G.secs}s rounds`;
   rows.forEach((r,i)=>{const li=document.createElement('li');if(r.id===UID)li.className='me';
     const n=document.createElement('span');n.className='n';n.textContent=i+1;
     const img=document.createElement('img');img.alt='';img.src=ps[r.id]?.avatarUrl||DEFAULT_AVATAR;
